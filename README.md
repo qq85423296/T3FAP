@@ -22,14 +22,16 @@ docker pull ghcr.io/qq85423296/t3fap:latest
 docker run -d --name t3fap \
   -p 8521:8521 \
   -e T3MT_PUBLIC_BASE_URL=http://127.0.0.1:8521 \
-  -v t3fap-storage:/app/storage \
+  -v ./data:/app/storage \
+  -v ./downloads:/app/backend/downloads \
   ghcr.io/qq85423296/t3fap:latest
 ```
 
 说明：
 
 - 默认会使用容器内 SQLite 数据库
-- `t3fap-storage` 用于持久化运行数据和日志
+- `./data` 用于持久化数据库、日志和运行数据
+- `./downloads` 用于持久化下载目录、STRM 文件和本地目录插件可见内容
 - 访问地址默认是 `http://127.0.0.1:8521`
 
 ### 3. 使用 `docker run` 连接 MySQL
@@ -39,7 +41,8 @@ docker run -d --name t3fap \
   -p 8521:8521 \
   -e T3MT_PUBLIC_BASE_URL=http://127.0.0.1:8521 \
   -e T3MT_DATABASE_URL="mysql+pymysql://t3mt:change_me@host.docker.internal:3306/t3mt_next?charset=utf8mb4" \
-  -v t3fap-storage:/app/storage \
+  -v ./data:/app/storage \
+  -v ./downloads:/app/backend/downloads \
   ghcr.io/qq85423296/t3fap:latest
 ```
 
@@ -48,6 +51,7 @@ docker run -d --name t3fap \
 仓库已提供 `compose.yaml`，可直接使用：
 
 ```bash
+mkdir -p data downloads
 docker compose up -d
 ```
 
@@ -58,6 +62,11 @@ docker compose down
 ```
 
 如果需要改成 MySQL，只要把 `compose.yaml` 里的 `T3MT_DATABASE_URL` 改为你的 MySQL 连接串即可。
+
+目录说明：
+
+- `./data`：数据库、日志、运行状态
+- `./downloads`：下载文件、STRM 文件、官方本地目录内容
 
 ## 启动验证
 
@@ -72,5 +81,5 @@ curl http://127.0.0.1:8521/api/health
 docker pull ghcr.io/qq85423296/t3fap:latest
 docker stop t3fap
 docker rm t3fap
-docker run -d --name t3fap -p 8521:8521 -e T3MT_PUBLIC_BASE_URL=http://127.0.0.1:8521 -v t3fap-storage:/app/storage ghcr.io/qq85423296/t3fap:latest
+docker run -d --name t3fap -p 8521:8521 -e T3MT_PUBLIC_BASE_URL=http://127.0.0.1:8521 -v ./data:/app/storage -v ./downloads:/app/backend/downloads ghcr.io/qq85423296/t3fap:latest
 ```

@@ -9,7 +9,5 @@ services:
       T3MT_PUBLIC_BASE_URL: http://127.0.0.1:8521
       T3MT_DATABASE_URL: sqlite:////app/storage/runtime/t3mt-next.db
     volumes:
-      - t3fap-storage:/app/storage
-
-volumes:
-  t3fap-storage:
+      - ./data:/app/storage
+      - ./downloads:/app/backend/downloads
