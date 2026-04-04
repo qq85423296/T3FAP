@@ -2,7 +2,7 @@ services:
   t3fap:
     image: ghcr.io/qq85423296/t3fap:latest
     container_name: t3fap
-    restart: unless-stopped
+    restart: always
     ports:
       - "8521:8521"
     environment:
