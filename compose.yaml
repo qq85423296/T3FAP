@@ -1,0 +1,15 @@
+services:
+  t3fap:
+    image: ghcr.io/qq85423296/t3fap:latest
+    container_name: t3fap
+    restart: unless-stopped
+    ports:
+      - "8521:8521"
+    environment:
+      T3MT_PUBLIC_BASE_URL: http://127.0.0.1:8521
+      T3MT_DATABASE_URL: sqlite:////app/storage/runtime/t3mt-next.db
+    volumes:
+      - t3fap-storage:/app/storage
+
+volumes:
+  t3fap-storage:
