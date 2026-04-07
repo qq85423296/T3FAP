@@ -2,6 +2,33 @@
 
 T3MT Film Auto Platform，简称 T3FAP，是一个面向影视自动化场景的服务，提供资源搜索、网盘接入、任务调度与插件扩展能力。
 
+## 官方插件库
+
+当前仓库同时承载 T3FAP 的部署说明和官方远程插件市场目录，`plugins/` 下的内容可以直接作为 `t3` 插件中心的远程仓库来源使用。
+
+仓库地址：
+
+- `https://github.com/qq85423296/T3FAP`
+
+插件中心中可直接填写：
+
+- `https://github.com/qq85423296/T3FAP`
+- `https://github.com/qq85423296/T3FAP/tree/main/plugins`
+
+当前已适配的资源探索插件：
+
+- `catalog.cctv`：CCTV 探索
+- `catalog.migu`：咪咕视频探索
+- `catalog.bilibili`：哔哩哔哩探索
+- `catalog.bangumi_daily`：Bangumi 每日放送探索
+- `catalog.mango`：芒果 TV 探索
+- `catalog.tencent`：腾讯视频探索
+
+说明：
+
+- 以上插件基于 `DDSRem-Dev/MoviePilot-Plugins` 的探索能力重新适配为 `t3` 的 `catalog` 插件协议。
+- 适配后可在资源中心直接浏览各平台榜单/目录数据，并继续转交到现有资源动作体系。
+
 ## Docker 镜像
 
 - 镜像名称：`T3FAP`

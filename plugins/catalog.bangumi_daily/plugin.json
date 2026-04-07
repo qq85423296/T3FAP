@@ -1,0 +1,36 @@
+{
+  "id": "catalog.bangumi_daily",
+  "name": "Bangumi每日放送探索",
+  "version": "0.1.0",
+  "category": "catalog",
+  "description": "让资源中心支持浏览 Bangumi 每日放送列表，并按当前星期优先展示。",
+  "core_version": ">=1.0.0 <2.0.0",
+  "contract_version": "1.0",
+  "capabilities": [
+    "resource.catalog",
+    "resource.search.handoff"
+  ],
+  "backend": {
+    "entry": "backend.plugin:plugin"
+  },
+  "permissions": [
+    "network"
+  ],
+  "dependencies": [],
+  "resource": {
+    "source_label": "Bangumi",
+    "source_group": "catalog",
+    "supported_media_types": [
+      "anime"
+    ],
+    "target_types": [
+      "official"
+    ],
+    "priority": 33
+  },
+  "ui": {
+    "menus": [],
+    "settings_sections": [],
+    "task_templates": []
+  }
+}
