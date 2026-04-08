@@ -9,9 +9,12 @@ from core.sdk import (
     HealthReport,
     OfficialLink,
     ResourceCapabilities,
+    ResourceFilterGroup,
+    ResourceFilterOption,
     ResourceItem,
     ResourceLinks,
     ResourceListPage,
+    ResourceQueryResponse,
     ResourceSection,
 )
 from core.services.resource_http import fetch_json
@@ -29,6 +32,9 @@ WEEKDAY_LABELS = {
     6: "星期六",
     7: "星期日",
 }
+MEDIA_TYPE_FILTERS = [
+    ResourceFilterOption(value="anime", label="Anime"),
+]
 
 
 class BangumiDailyCatalogPlugin(BasePlugin, CatalogProvider):
@@ -41,6 +47,31 @@ class BangumiDailyCatalogPlugin(BasePlugin, CatalogProvider):
 
     def health(self, ctx: dict[str, Any]) -> HealthReport:
         return HealthReport(status="ok", message="Bangumi daily catalog plugin is ready.")
+
+    def query(self, filters: dict[str, Any], cursor: str | None, limit: int) -> ResourceQueryResponse:
+        page = self._page_from_cursor(cursor)
+        page_result = self.list_items(
+            "anime",
+            {
+                "page": page,
+                "page_size": limit,
+            },
+        )
+        return ResourceQueryResponse(
+            filter_groups=[
+                ResourceFilterGroup(
+                    key="media_type",
+                    label="Type",
+                    level=1,
+                    options=MEDIA_TYPE_FILTERS,
+                    selected="anime",
+                )
+            ],
+            items=page_result.items,
+            next_cursor=str(page + 1) if page_result.has_more else None,
+            total=page_result.total,
+            notice=page_result.notice,
+        )
 
     def list_sections(self) -> list[ResourceSection]:
         return [
@@ -223,6 +254,15 @@ class BangumiDailyCatalogPlugin(BasePlugin, CatalogProvider):
             return float(str(value).strip())
         except (TypeError, ValueError):
             return None
+
+    @staticmethod
+    def _page_from_cursor(cursor: str | None) -> int:
+        try:
+            if not cursor:
+                return 1
+            return max(int(str(cursor).strip()), 1)
+        except (TypeError, ValueError):
+            return 1
 
 
 plugin = BangumiDailyCatalogPlugin()

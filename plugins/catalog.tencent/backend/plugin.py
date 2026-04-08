@@ -13,9 +13,12 @@ from core.sdk import (
     OfficialLink,
     ResourceAction,
     ResourceCapabilities,
+    ResourceFilterGroup,
+    ResourceFilterOption,
     ResourceItem,
     ResourceLinks,
     ResourceListPage,
+    ResourceQueryResponse,
     ResourceSection,
 )
 
@@ -46,6 +49,40 @@ MEDIA_TYPE_LABELS = {
     "anime": "动漫",
 }
 TENCENT_PAGE_SIZE = 21
+MEDIA_TYPE_FILTERS = [
+    ResourceFilterOption(value="tv", label="TV"),
+    ResourceFilterOption(value="movie", label="Movie"),
+    ResourceFilterOption(value="variety", label="Variety"),
+    ResourceFilterOption(value="anime", label="Anime"),
+    ResourceFilterOption(value="documentary", label="Documentary"),
+]
+SORT_FILTERS = [
+    ResourceFilterOption(value="hot_desc", label="Hot"),
+    ResourceFilterOption(value="score_desc", label="Score"),
+    ResourceFilterOption(value="year_desc", label="Newest"),
+    ResourceFilterOption(value="year_asc", label="Oldest"),
+    ResourceFilterOption(value="title_asc", label="Title"),
+]
+YEAR_FILTERS = [
+    ResourceFilterOption(value="all", label="All"),
+    ResourceFilterOption(value="2026", label="2026"),
+    ResourceFilterOption(value="2025", label="2025"),
+    ResourceFilterOption(value="2024", label="2024"),
+    ResourceFilterOption(value="2023", label="2023"),
+    ResourceFilterOption(value="2022", label="2022"),
+    ResourceFilterOption(value="2021", label="2021"),
+    ResourceFilterOption(value="2020", label="2020"),
+    ResourceFilterOption(value="2019", label="2019"),
+    ResourceFilterOption(value="2018", label="2018"),
+    ResourceFilterOption(value="2017", label="2017"),
+    ResourceFilterOption(value="2016", label="2016"),
+    ResourceFilterOption(value="older", label="<=2015"),
+]
+FEE_FILTERS = [
+    ResourceFilterOption(value="all", label="All"),
+    ResourceFilterOption(value="free", label="Free"),
+    ResourceFilterOption(value="vip", label="VIP"),
+]
 
 
 class TencentCatalogPlugin(BasePlugin, CatalogProvider):
@@ -58,6 +95,37 @@ class TencentCatalogPlugin(BasePlugin, CatalogProvider):
 
     def health(self, ctx: dict[str, Any]) -> HealthReport:
         return HealthReport(status="ok", message="Tencent catalog plugin is ready.")
+
+    def query(self, filters: dict[str, Any], cursor: str | None, limit: int) -> ResourceQueryResponse:
+        media_type = str(filters.get("media_type") or "tv").strip()
+        if media_type not in TENCENT_SECTIONS:
+            media_type = "tv"
+
+        page = self._page_from_cursor(cursor)
+        payload = self._fetch_page(media_type, page)
+        raw_items, raw_total = self._extract_items(payload)
+        batch_limit = max(min(int(limit or TENCENT_PAGE_SIZE), TENCENT_PAGE_SIZE), 1)
+        mapped_items = [
+            self._map_item(item, media_type, ranking=(page - 1) * TENCENT_PAGE_SIZE + index + 1)
+            for index, item in enumerate(raw_items)
+        ]
+        filtered_items = self._apply_local_filters(mapped_items, filters)[:batch_limit]
+
+        local_filters_active = any(
+            str(filters.get(key) or default) != default
+            for key, default in (
+                ("sort", "hot_desc"),
+                ("year", "all"),
+                ("fee", "all"),
+            )
+        )
+        has_more = page * TENCENT_PAGE_SIZE < raw_total
+        return ResourceQueryResponse(
+            filter_groups=self._build_filter_groups(media_type, filters),
+            items=filtered_items,
+            next_cursor=str(page + 1) if has_more else None,
+            total=None if local_filters_active else raw_total,
+        )
 
     def list_sections(self) -> list[ResourceSection]:
         return [
@@ -235,6 +303,7 @@ class TencentCatalogPlugin(BasePlugin, CatalogProvider):
                 "cid": cid,
                 "area": area,
                 "main_genre": main_genre,
+                "vip": bool(vip_tag),
                 "publish_date": str(item.get("publish_date") or "").strip(),
                 "leading_actor": self._normalize_bracket_text(item.get("leading_actor")),
                 "sub_title": str(item.get("sub_title") or item.get("second_title") or "").strip(),
@@ -298,6 +367,80 @@ class TencentCatalogPlugin(BasePlugin, CatalogProvider):
             if part
         )
 
+    def _build_filter_groups(self, media_type: str, filters: dict[str, Any]) -> list[ResourceFilterGroup]:
+        return [
+            ResourceFilterGroup(
+                key="media_type",
+                label="Type",
+                level=1,
+                options=MEDIA_TYPE_FILTERS,
+                selected=media_type,
+                hidden_when_empty=False,
+            ),
+            ResourceFilterGroup(
+                key="sort",
+                label="Sort",
+                level=2,
+                options=SORT_FILTERS,
+                selected=self._normalize_filter_value(filters.get("sort"), "hot_desc", SORT_FILTERS),
+                hidden_when_empty=False,
+            ),
+            ResourceFilterGroup(
+                key="year",
+                label="Year",
+                level=3,
+                options=YEAR_FILTERS,
+                selected=self._normalize_filter_value(filters.get("year"), "all", YEAR_FILTERS),
+                hidden_when_empty=False,
+            ),
+            ResourceFilterGroup(
+                key="fee",
+                label="Access",
+                level=4,
+                options=FEE_FILTERS,
+                selected=self._normalize_filter_value(filters.get("fee"), "all", FEE_FILTERS),
+                hidden_when_empty=False,
+            ),
+        ]
+
+    def _apply_local_filters(self, items: list[ResourceItem], filters: dict[str, Any]) -> list[ResourceItem]:
+        year = self._normalize_filter_value(filters.get("year"), "all", YEAR_FILTERS)
+        fee = self._normalize_filter_value(filters.get("fee"), "all", FEE_FILTERS)
+        sort_key = self._normalize_filter_value(filters.get("sort"), "hot_desc", SORT_FILTERS)
+
+        filtered = items
+        if year != "all":
+            if year == "older":
+                filtered = [item for item in filtered if item.year is not None and item.year <= 2015]
+            else:
+                filtered = [item for item in filtered if str(item.year or "") == year]
+
+        if fee == "vip":
+            filtered = [item for item in filtered if bool(item.meta.get("vip"))]
+        elif fee == "free":
+            filtered = [item for item in filtered if not bool(item.meta.get("vip"))]
+
+        return self._sort_items(filtered, sort_key)
+
+    @staticmethod
+    def _sort_items(items: list[ResourceItem], sort_key: str) -> list[ResourceItem]:
+        if sort_key == "score_desc":
+            return sorted(items, key=lambda item: TencentCatalogPlugin._to_float(item.meta.get("score")), reverse=True)
+        if sort_key == "year_desc":
+            return sorted(items, key=lambda item: item.year or 0, reverse=True)
+        if sort_key == "year_asc":
+            return sorted(items, key=lambda item: item.year or 0)
+        if sort_key == "title_asc":
+            return sorted(items, key=lambda item: item.title or "")
+        return sorted(items, key=lambda item: int(item.meta.get("ranking") or 0) or 10**9)
+
+    @staticmethod
+    def _normalize_filter_value(value: Any, fallback: str, options: list[ResourceFilterOption]) -> str:
+        normalized = str(value or "").strip()
+        if any(option.value == normalized for option in options):
+            return normalized
+        return fallback
+
     @staticmethod
     def _build_task_actions() -> list[ResourceAction]:
         return [
@@ -317,6 +460,24 @@ class TencentCatalogPlugin(BasePlugin, CatalogProvider):
                 payload={"template_key": "strm_generate"},
             ),
         ]
+
+    @staticmethod
+    def _page_from_cursor(cursor: str | None) -> int:
+        try:
+            if not cursor:
+                return 1
+            return max(int(str(cursor).strip()), 1)
+        except (TypeError, ValueError):
+            return 1
+
+    @staticmethod
+    def _to_float(value: Any) -> float:
+        try:
+            if value in ("", None):
+                return 0.0
+            return float(str(value).strip())
+        except (TypeError, ValueError):
+            return 0.0
 
 
 plugin = TencentCatalogPlugin()

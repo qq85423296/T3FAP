@@ -9,9 +9,12 @@ from core.sdk import (
     HealthReport,
     OfficialLink,
     ResourceCapabilities,
+    ResourceFilterGroup,
+    ResourceFilterOption,
     ResourceItem,
     ResourceLinks,
     ResourceListPage,
+    ResourceQueryResponse,
     ResourceSection,
 )
 from core.services.resource_http import fetch_json
@@ -34,6 +37,13 @@ MEDIA_TYPE_LABELS = {
     "documentary": "纪录片",
     "anime": "番剧",
 }
+MEDIA_TYPE_FILTERS = [
+    ResourceFilterOption(value="movie", label="Movie"),
+    ResourceFilterOption(value="tv", label="TV"),
+    ResourceFilterOption(value="variety", label="Variety"),
+    ResourceFilterOption(value="documentary", label="Documentary"),
+    ResourceFilterOption(value="anime", label="Anime"),
+]
 
 
 class BilibiliCatalogPlugin(BasePlugin, CatalogProvider):
@@ -46,6 +56,36 @@ class BilibiliCatalogPlugin(BasePlugin, CatalogProvider):
 
     def health(self, ctx: dict[str, Any]) -> HealthReport:
         return HealthReport(status="ok", message="Bilibili catalog plugin is ready.")
+
+    def query(self, filters: dict[str, Any], cursor: str | None, limit: int) -> ResourceQueryResponse:
+        media_type = str(filters.get("media_type") or "tv").strip()
+        if media_type not in BILIBILI_SECTIONS:
+            media_type = "tv"
+
+        page = self._page_from_cursor(cursor)
+        page_result = self.list_items(
+            media_type,
+            {
+                "media_type": media_type,
+                "page": page,
+                "page_size": limit,
+            },
+        )
+        return ResourceQueryResponse(
+            filter_groups=[
+                ResourceFilterGroup(
+                    key="media_type",
+                    label="Type",
+                    level=1,
+                    options=MEDIA_TYPE_FILTERS,
+                    selected=media_type,
+                )
+            ],
+            items=page_result.items,
+            next_cursor=str(page + 1) if page_result.has_more else None,
+            total=page_result.total,
+            notice=page_result.notice,
+        )
 
     def list_sections(self) -> list[ResourceSection]:
         return [
@@ -214,6 +254,15 @@ class BilibiliCatalogPlugin(BasePlugin, CatalogProvider):
             ]
             if part
         )
+
+    @staticmethod
+    def _page_from_cursor(cursor: str | None) -> int:
+        try:
+            if not cursor:
+                return 1
+            return max(int(str(cursor).strip()), 1)
+        except (TypeError, ValueError):
+            return 1
 
 
 plugin = BilibiliCatalogPlugin()
