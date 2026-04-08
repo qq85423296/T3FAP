@@ -24,11 +24,6 @@ T3MT Film Auto Platform，简称 T3FAP，是一个面向影视自动化场景的
 - `catalog.mango`：芒果 TV 探索
 - `catalog.tencent`：腾讯视频探索
 
-说明：
-
-- 以上插件基于 `DDSRem-Dev/MoviePilot-Plugins` 的探索能力重新适配为 `t3` 的 `catalog` 插件协议。
-- 适配后可在资源中心直接浏览各平台榜单/目录数据，并继续转交到现有资源动作体系。
-
 ## Docker 镜像
 
 - 镜像名称：`ghcr.io/qq85423296/t3fap:latest`
