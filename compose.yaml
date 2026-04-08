@@ -2,7 +2,7 @@ services:
   mysql:
     image: mysql:8.0
     container_name: t3fap-mysql
-    restart: unless-stopped
+    restart: always
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_0900_ai_ci
@@ -27,7 +27,7 @@ services:
   t3fap:
     image: ghcr.io/qq85423296/t3fap:latest
     container_name: t3fap
-    restart: unless-stopped
+    restart: always
     depends_on:
       mysql:
         condition: service_healthy
