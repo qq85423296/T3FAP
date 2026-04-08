@@ -1,13 +1,46 @@
 services:
+  mysql:
+    image: mysql:8.0
+    container_name: t3fap-mysql
+    restart: unless-stopped
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_ai_ci
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-t3mt_next}
+      MYSQL_USER: ${MYSQL_USER:-t3mt}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-change_me}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-change_root_me}
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin ping -h 127.0.0.1 -uroot -p\"$$MYSQL_ROOT_PASSWORD\" --silent",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
   t3fap:
     image: ghcr.io/qq85423296/t3fap:latest
     container_name: t3fap
-    restart: always
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    command:
+      - sh
+      - -c
+      - alembic upgrade head && uvicorn apps.api.main:app --host 0.0.0.0 --port 8521
     ports:
-      - "8521:8521"
+      - "${T3FAP_PORT:-8521}:8521"
     environment:
-      T3MT_PUBLIC_BASE_URL: http://127.0.0.1:8521
-      T3MT_DATABASE_URL: sqlite:////app/storage/runtime/t3mt-next.db
+      # Replace this with the exact LAN IP or domain that browsers and media players use to reach T3FAP.
+      T3MT_PUBLIC_BASE_URL: ${T3MT_PUBLIC_BASE_URL:-http://127.0.0.1:8521}
+      T3MT_DATABASE_URL: mysql+pymysql://${MYSQL_USER:-t3mt}:${MYSQL_PASSWORD:-change_me}@mysql:3306/${MYSQL_DATABASE:-t3mt_next}?charset=utf8mb4
     volumes:
       - ./data:/app/storage
       - ./downloads:/app/backend/downloads
