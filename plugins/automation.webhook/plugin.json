@@ -1,0 +1,111 @@
+{
+  "id": "automation.webhook",
+  "name": "通用 Webhook 通知自动化",
+  "version": "1.0.0",
+  "category": "automation",
+  "description": "监听任务和系统事件，通过 HTTP Webhook 将结构化消息推送到第三方系统，便于快速对接外部平台。",
+  "author": "T3MT Official",
+  "homepage": "",
+  "license": "MIT",
+  "core_version": ">=1.0.0 <2.0.0",
+  "contract_version": "1.0",
+  "capabilities": [
+    "automation.event_handler",
+    "notification.webhook"
+  ],
+  "backend": {
+    "entry": "backend.plugin:plugin"
+  },
+  "permissions": [
+    "network",
+    "secret.read"
+  ],
+  "dependencies": [],
+  "optional_dependencies": [],
+  "config_schema": [
+    {
+      "key": "enabled",
+      "label": "启用插件",
+      "type": "boolean",
+      "required": false,
+      "default": true,
+      "description": "是否启用通用 Webhook 通知自动化。",
+      "secret": false,
+      "group": "基础设置"
+    },
+    {
+      "key": "url",
+      "label": "Webhook 地址",
+      "type": "string",
+      "required": true,
+      "default": "",
+      "description": "接收结构化通知消息的 HTTP 地址。",
+      "secret": true,
+      "group": "基础设置"
+    },
+    {
+      "key": "method",
+      "label": "请求方法",
+      "type": "string",
+      "required": false,
+      "default": "POST",
+      "description": "发送通知时使用的 HTTP 请求方法。",
+      "secret": false,
+      "group": "基础设置"
+    },
+    {
+      "key": "headers_json",
+      "label": "请求头配置",
+      "type": "string",
+      "required": false,
+      "default": "{}",
+      "description": "附加请求头，使用 JSON 字符串格式填写。",
+      "secret": false,
+      "group": "通知设置"
+    },
+    {
+      "key": "auth_token",
+      "label": "认证令牌",
+      "type": "string",
+      "required": false,
+      "default": "",
+      "description": "用于第三方鉴权的令牌或密钥。",
+      "secret": true,
+      "group": "通知设置"
+    },
+    {
+      "key": "enabled_events",
+      "label": "启用事件列表",
+      "type": "string",
+      "required": false,
+      "default": "task.completed,task.failed",
+      "description": "需要发送通知的事件类型列表，多个值用英文逗号分隔。",
+      "secret": false,
+      "group": "通知设置"
+    },
+    {
+      "key": "timeout_seconds",
+      "label": "请求超时时间",
+      "type": "integer",
+      "required": false,
+      "default": 10,
+      "description": "Webhook 请求超时时间，单位为秒。",
+      "secret": false,
+      "group": "高级设置"
+    }
+  ],
+  "ui": {
+    "menus": [],
+    "settings_sections": [
+      {
+        "key": "notification.webhook",
+        "title": "通用 Webhook 通知"
+      }
+    ],
+    "task_templates": []
+  },
+  "healthcheck": {
+    "enabled": true,
+    "interval_seconds": 300
+  }
+}

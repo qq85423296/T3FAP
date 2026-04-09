@@ -1,0 +1,112 @@
+{
+  "id": "assistant.wecom_bot",
+  "name": "企业微信助手机器人",
+  "version": "1.0.0",
+  "category": "assistant",
+  "description": "接收企业微信 webhook 消息，通过对话方式查询任务状态、执行平台命令并触发自动化操作。",
+  "author": "T3MT Official",
+  "homepage": "",
+  "license": "MIT",
+  "core_version": ">=1.0.0 <2.0.0",
+  "contract_version": "1.0",
+  "capabilities": [
+    "assistant.command_gateway",
+    "assistant.wecom_bot"
+  ],
+  "backend": {
+    "entry": "backend.plugin:plugin"
+  },
+  "permissions": [
+    "network",
+    "secret.read",
+    "task.dispatch"
+  ],
+  "dependencies": [],
+  "optional_dependencies": [],
+  "config_schema": [
+    {
+      "key": "enabled",
+      "label": "启用插件",
+      "type": "boolean",
+      "required": false,
+      "default": true,
+      "description": "是否启用企业微信助手机器人。",
+      "secret": false,
+      "group": "基础设置"
+    },
+    {
+      "key": "corp_id",
+      "label": "企业 ID",
+      "type": "string",
+      "required": true,
+      "default": "",
+      "description": "企业微信管理后台中的企业 ID。",
+      "secret": false,
+      "group": "基础设置"
+    },
+    {
+      "key": "agent_id",
+      "label": "应用 AgentId",
+      "type": "string",
+      "required": true,
+      "default": "",
+      "description": "企业微信助手应用的 AgentId。",
+      "secret": false,
+      "group": "基础设置"
+    },
+    {
+      "key": "callback_token",
+      "label": "回调令牌",
+      "type": "string",
+      "required": true,
+      "default": "",
+      "description": "企业微信回调配置中的 Token，用于校验消息来源。",
+      "secret": true,
+      "group": "基础设置"
+    },
+    {
+      "key": "encoding_aes_key",
+      "label": "消息加密密钥",
+      "type": "string",
+      "required": true,
+      "default": "",
+      "description": "企业微信回调配置中的 EncodingAESKey，用于解密回调消息。",
+      "secret": true,
+      "group": "基础设置"
+    },
+    {
+      "key": "allowed_users",
+      "label": "允许使用成员列表",
+      "type": "string",
+      "required": false,
+      "default": "",
+      "description": "允许使用机器人的成员账号列表，多个值用英文逗号分隔；为空表示不限制。",
+      "secret": false,
+      "group": "权限设置"
+    },
+    {
+      "key": "command_prefix",
+      "label": "命令前缀",
+      "type": "string",
+      "required": false,
+      "default": "/",
+      "description": "在企业微信对话中触发平台命令时使用的前缀。",
+      "secret": false,
+      "group": "交互设置"
+    }
+  ],
+  "ui": {
+    "menus": [],
+    "settings_sections": [
+      {
+        "key": "assistant.wecom_bot",
+        "title": "企业微信助手机器人"
+      }
+    ],
+    "task_templates": []
+  },
+  "healthcheck": {
+    "enabled": true,
+    "interval_seconds": 300
+  }
+}

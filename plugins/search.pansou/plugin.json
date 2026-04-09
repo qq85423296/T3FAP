@@ -1,0 +1,62 @@
+{
+  "id": "search.pansou",
+  "name": "盘搜聚合",
+  "version": "0.1.1",
+  "category": "search",
+  "description": "适配旧项目使用的盘搜接口，统一输出可转存的分享资源结果。",
+  "core_version": ">=1.0.0 <2.0.0",
+  "contract_version": "1.0",
+  "capabilities": [
+    "resource.search",
+    "resource.task.transfer"
+  ],
+  "backend": {
+    "entry": "backend.plugin:plugin"
+  },
+  "permissions": [
+    "network"
+  ],
+  "dependencies": [],
+  "config_schema": [
+    {
+      "key": "api_url",
+      "label": "盘搜服务地址",
+      "type": "string",
+      "required": false,
+      "default": "",
+      "description": "盘搜服务根地址，优先于环境变量 T3MT_PANSOU_API_URL。",
+      "secret": false,
+      "group": "基础设置"
+    },
+    {
+      "key": "api_key",
+      "label": "接口密钥",
+      "type": "string",
+      "required": false,
+      "default": "",
+      "description": "可选鉴权密钥，优先于环境变量 T3MT_PANSOU_API_KEY。",
+      "secret": true,
+      "group": "基础设置"
+    }
+  ],
+  "resource": {
+    "source_label": "盘搜",
+    "source_group": "search",
+    "supported_media_types": [
+      "movie",
+      "tv",
+      "variety",
+      "anime",
+      "documentary"
+    ],
+    "target_types": [
+      "share"
+    ],
+    "priority": 40
+  },
+  "ui": {
+    "menus": [],
+    "settings_sections": [],
+    "task_templates": []
+  }
+}

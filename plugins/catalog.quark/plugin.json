@@ -1,0 +1,40 @@
+{
+  "id": "catalog.quark",
+  "name": "夸克热榜",
+  "version": "0.1.0",
+  "category": "catalog",
+  "description": "基于夸克影视热榜接口提供资源展示，并支持继续转交到盘搜。",
+  "core_version": ">=1.0.0 <2.0.0",
+  "contract_version": "1.0",
+  "capabilities": [
+    "resource.catalog",
+    "resource.search.handoff"
+  ],
+  "backend": {
+    "entry": "backend.plugin:plugin"
+  },
+  "permissions": [
+    "network"
+  ],
+  "dependencies": [],
+  "resource": {
+    "source_label": "夸克",
+    "source_group": "catalog",
+    "supported_media_types": [
+      "movie",
+      "tv",
+      "variety",
+      "anime"
+    ],
+    "target_types": [
+      "official",
+      "share"
+    ],
+    "priority": 20
+  },
+  "ui": {
+    "menus": [],
+    "settings_sections": [],
+    "task_templates": []
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "id": "automation.email",
+  "name": "邮件通知自动化",
+  "version": "1.0.0",
+  "category": "automation",
+  "description": "监听任务和系统事件，通过 SMTP 发送邮件通知，适用于告警、日报、失败汇总和结果回执。",
+  "author": "T3MT Official",
+  "homepage": "",
+  "license": "MIT",
+  "core_version": ">=1.0.0 <2.0.0",
+  "contract_version": "1.0",
+  "capabilities": [
+    "automation.event_handler",
+    "notification.email"
+  ],
+  "backend": {
+    "entry": "backend.plugin:plugin"
+  },
+  "permissions": [
+    "network",
+    "secret.read"
+  ],
+  "dependencies": [],
+  "optional_dependencies": [],
+  "config_schema": [
+    {
+      "key": "enabled",
+      "label": "启用插件",
+      "type": "boolean",
+      "required": false,
+      "default": true,
+      "description": "是否启用邮件通知自动化。",
+      "secret": false,
+      "group": "基础设置"
+    },
+    {
+      "key": "smtp_host",
+      "label": "SMTP 服务器",
+      "type": "string",
+      "required": true,
+      "default": "",
+      "description": "发送邮件使用的 SMTP 服务器地址。",
+      "secret": false,
+      "group": "基础设置"
+    },
+    {
+      "key": "smtp_port",
+      "label": "SMTP 端口",
+      "type": "integer",
+      "required": false,
+      "default": 465,
+      "description": "发送邮件使用的 SMTP 端口。",
+      "secret": false,
+      "group": "基础设置"
+    },
+    {
+      "key": "username",
+      "label": "发件账号",
+      "type": "string",
+      "required": true,
+      "default": "",
+      "description": "SMTP 登录账号，通常为邮箱地址。",
+      "secret": false,
+      "group": "基础设置"
+    },
+    {
+      "key": "password",
+      "label": "发件密码或授权码",
+      "type": "string",
+      "required": true,
+      "default": "",
+      "description": "SMTP 登录密码或邮箱服务提供方生成的授权码。",
+      "secret": true,
+      "group": "基础设置"
+    },
+    {
+      "key": "from_name",
+      "label": "发件人名称",
+      "type": "string",
+      "required": false,
+      "default": "T3MT 通知中心",
+      "description": "邮件中展示的发件人名称。",
+      "secret": false,
+      "group": "通知设置"
+    },
+    {
+      "key": "to_list",
+      "label": "默认收件人列表",
+      "type": "string",
+      "required": false,
+      "default": "",
+      "description": "默认接收通知的邮箱列表，多个值用英文逗号分隔。",
+      "secret": false,
+      "group": "通知设置"
+    },
+    {
+      "key": "use_tls",
+      "label": "启用 TLS",
+      "type": "boolean",
+      "required": false,
+      "default": true,
+      "description": "是否启用 TLS 安全连接。",
+      "secret": false,
+      "group": "高级设置"
+    }
+  ],
+  "ui": {
+    "menus": [],
+    "settings_sections": [
+      {
+        "key": "notification.email",
+        "title": "邮件通知"
+      }
+    ],
+    "task_templates": []
+  },
+  "healthcheck": {
+    "enabled": true,
+    "interval_seconds": 300
+  }
+}

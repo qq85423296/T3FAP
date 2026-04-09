@@ -42,6 +42,7 @@ plugins/
 ## 先看哪份文档
 
 - 想先知道整体规则，请看 [rules.md](./rules.md)
+- 想按插件类型查看协议、入口和常见坑点，请看 [types.md](./types.md)
 - 想直接照抄一个最小资源插件，请看 [minimal-catalog-plugin.md](./examples/minimal-catalog-plugin.md)
 - 想开发任务插件，请看 [minimal-task-plugin.md](./examples/minimal-task-plugin.md)
 - 想开发网盘插件，请看 [minimal-drive-plugin.md](./examples/minimal-drive-plugin.md)
@@ -74,6 +75,15 @@ plugins/
 - `plugins/catalog.bangumi_daily`
 - `plugins/catalog.iqiyi`
 - `plugins/catalog.youku`
+- `plugins/catalog.360`
+- `plugins/catalog.quark`
+- `plugins/search.pansou`
+- `plugins/automation.dingtalk_robot`
+- `plugins/automation.email`
+- `plugins/automation.feishu_bot`
+- `plugins/automation.webhook`
+- `plugins/automation.wecom_app`
+- `plugins/assistant.wecom_bot`
 
 如果你准备做第三方资源来源插件，直接参考这些实现会最快。
 

@@ -1,0 +1,121 @@
+{
+  "id": "automation.wecom_app",
+  "name": "企业微信应用消息通知自动化",
+  "version": "1.0.0",
+  "category": "automation",
+  "description": "监听任务和系统事件，通过企业微信应用消息向指定成员、部门或标签发送通知，适用于更精细的企业内消息触达。",
+  "author": "T3MT Official",
+  "homepage": "",
+  "license": "MIT",
+  "core_version": ">=1.0.0 <2.0.0",
+  "contract_version": "1.0",
+  "capabilities": [
+    "automation.event_handler",
+    "notification.wecom_app"
+  ],
+  "backend": {
+    "entry": "backend.plugin:plugin"
+  },
+  "permissions": [
+    "network",
+    "secret.read"
+  ],
+  "dependencies": [],
+  "optional_dependencies": [],
+  "config_schema": [
+    {
+      "key": "enabled",
+      "label": "启用插件",
+      "type": "boolean",
+      "required": false,
+      "default": true,
+      "description": "是否启用企业微信应用消息通知自动化。",
+      "secret": false,
+      "group": "基础设置"
+    },
+    {
+      "key": "corp_id",
+      "label": "企业 ID",
+      "type": "string",
+      "required": true,
+      "default": "",
+      "description": "企业微信管理后台中的企业 ID。",
+      "secret": false,
+      "group": "基础设置"
+    },
+    {
+      "key": "corp_secret",
+      "label": "应用密钥",
+      "type": "string",
+      "required": true,
+      "default": "",
+      "description": "企业微信应用对应的 Secret 密钥。",
+      "secret": true,
+      "group": "基础设置"
+    },
+    {
+      "key": "agent_id",
+      "label": "应用 AgentId",
+      "type": "string",
+      "required": true,
+      "default": "",
+      "description": "企业微信应用的 AgentId。",
+      "secret": false,
+      "group": "基础设置"
+    },
+    {
+      "key": "enabled_events",
+      "label": "启用事件列表",
+      "type": "string",
+      "required": false,
+      "default": "task.completed,task.failed",
+      "description": "需要发送通知的事件类型列表，多个值用英文逗号分隔。",
+      "secret": false,
+      "group": "通知设置"
+    },
+    {
+      "key": "to_user",
+      "label": "默认成员列表",
+      "type": "string",
+      "required": false,
+      "default": "",
+      "description": "默认接收通知的成员账号列表，多个值用英文逗号分隔。",
+      "secret": false,
+      "group": "通知设置"
+    },
+    {
+      "key": "to_party",
+      "label": "默认部门列表",
+      "type": "string",
+      "required": false,
+      "default": "",
+      "description": "默认接收通知的部门 ID 列表，多个值用英文逗号分隔。",
+      "secret": false,
+      "group": "通知设置"
+    },
+    {
+      "key": "to_tag",
+      "label": "默认标签列表",
+      "type": "string",
+      "required": false,
+      "default": "",
+      "description": "默认接收通知的标签 ID 列表，多个值用英文逗号分隔。",
+      "secret": false,
+      "group": "通知设置"
+    }
+  ],
+  "ui": {
+    "menus": [],
+    "settings_sections": [
+      {
+        "key": "notification.wecom_app",
+        "title": "企业微信应用消息通知"
+      }
+    ],
+    "task_templates": []
+  },
+  "healthcheck": {
+    "enabled": true,
+    "interval_seconds": 300
+  }
+}

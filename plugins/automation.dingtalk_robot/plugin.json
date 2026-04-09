@@ -1,0 +1,91 @@
+{
+  "id": "automation.dingtalk_robot",
+  "name": "钉钉机器人通知自动化",
+  "version": "1.0.0",
+  "category": "automation",
+  "description": "监听任务和系统事件，通过钉钉群机器人发送通知消息，适用于团队协作群内的告警提醒和状态同步。",
+  "author": "T3MT Official",
+  "homepage": "",
+  "license": "MIT",
+  "core_version": ">=1.0.0 <2.0.0",
+  "contract_version": "1.0",
+  "capabilities": [
+    "automation.event_handler",
+    "notification.dingtalk"
+  ],
+  "backend": {
+    "entry": "backend.plugin:plugin"
+  },
+  "permissions": [
+    "network",
+    "secret.read"
+  ],
+  "dependencies": [],
+  "optional_dependencies": [],
+  "config_schema": [
+    {
+      "key": "enabled",
+      "label": "启用插件",
+      "type": "boolean",
+      "required": false,
+      "default": true,
+      "description": "是否启用钉钉机器人通知自动化。",
+      "secret": false,
+      "group": "基础设置"
+    },
+    {
+      "key": "webhook_url",
+      "label": "机器人回调地址",
+      "type": "string",
+      "required": true,
+      "default": "",
+      "description": "钉钉群机器人的 webhook 回调地址。",
+      "secret": true,
+      "group": "基础设置"
+    },
+    {
+      "key": "secret",
+      "label": "加签密钥",
+      "type": "string",
+      "required": false,
+      "default": "",
+      "description": "启用安全加签时使用的签名密钥。",
+      "secret": true,
+      "group": "基础设置"
+    },
+    {
+      "key": "enabled_events",
+      "label": "启用事件列表",
+      "type": "string",
+      "required": false,
+      "default": "task.completed,task.failed",
+      "description": "需要发送通知的事件类型列表，多个值用英文逗号分隔。",
+      "secret": false,
+      "group": "通知设置"
+    },
+    {
+      "key": "at_mobiles",
+      "label": "提醒手机号列表",
+      "type": "string",
+      "required": false,
+      "default": "",
+      "description": "需要在钉钉消息中提醒的手机号列表，多个值用英文逗号分隔。",
+      "secret": false,
+      "group": "通知设置"
+    }
+  ],
+  "ui": {
+    "menus": [],
+    "settings_sections": [
+      {
+        "key": "notification.dingtalk",
+        "title": "钉钉机器人通知"
+      }
+    ],
+    "task_templates": []
+  },
+  "healthcheck": {
+    "enabled": true,
+    "interval_seconds": 300
+  }
+}
