@@ -72,6 +72,8 @@ plugins/
 - `plugins/catalog.cctv`
 - `plugins/catalog.migu`
 - `plugins/catalog.bangumi_daily`
+- `plugins/catalog.iqiyi`
+- `plugins/catalog.youku`
 
 如果你准备做第三方资源来源插件，直接参考这些实现会最快。
 

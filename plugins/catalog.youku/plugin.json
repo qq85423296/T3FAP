@@ -1,0 +1,39 @@
+{
+  "id": "catalog.youku",
+  "name": "优酷探索",
+  "version": "0.1.0",
+  "category": "catalog",
+  "description": "让资源中心支持浏览优酷的剧集、电影、综艺和动漫目录。",
+  "core_version": ">=1.0.0 <2.0.0",
+  "contract_version": "1.0",
+  "capabilities": [
+    "resource.catalog",
+    "resource.search.handoff"
+  ],
+  "backend": {
+    "entry": "backend.plugin:plugin"
+  },
+  "permissions": [
+    "network"
+  ],
+  "dependencies": [],
+  "resource": {
+    "source_label": "优酷",
+    "source_group": "catalog",
+    "supported_media_types": [
+      "movie",
+      "tv",
+      "variety",
+      "anime"
+    ],
+    "target_types": [
+      "official"
+    ],
+    "priority": 34
+  },
+  "ui": {
+    "menus": [],
+    "settings_sections": [],
+    "task_templates": []
+  }
+}

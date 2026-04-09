@@ -1,0 +1,40 @@
+{
+  "id": "catalog.iqiyi",
+  "name": "爱奇艺探索",
+  "version": "0.1.0",
+  "category": "catalog",
+  "description": "让资源中心支持浏览爱奇艺的剧集、电影、综艺、动漫和纪录片目录。",
+  "core_version": ">=1.0.0 <2.0.0",
+  "contract_version": "1.0",
+  "capabilities": [
+    "resource.catalog",
+    "resource.search.handoff"
+  ],
+  "backend": {
+    "entry": "backend.plugin:plugin"
+  },
+  "permissions": [
+    "network"
+  ],
+  "dependencies": [],
+  "resource": {
+    "source_label": "爱奇艺",
+    "source_group": "catalog",
+    "supported_media_types": [
+      "movie",
+      "tv",
+      "variety",
+      "documentary",
+      "anime"
+    ],
+    "target_types": [
+      "official"
+    ],
+    "priority": 33
+  },
+  "ui": {
+    "menus": [],
+    "settings_sections": [],
+    "task_templates": []
+  }
+}

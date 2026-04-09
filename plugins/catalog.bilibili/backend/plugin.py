@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import os
 import re
 from typing import Any
+from urllib.parse import quote
 
 from core.sdk import (
     BasePlugin,
@@ -22,6 +24,7 @@ from core.services.resource_http import fetch_json
 BILIBILI_LIST_URL = "https://api.bilibili.com/pgc/season/index/result"
 BILIBILI_HEADERS = {
     "Referer": "https://www.bilibili.com/",
+    "User-Agent": "Mozilla/5.0",
 }
 BILIBILI_SECTIONS = {
     "tv": {"title": "电视剧", "type": "1", "st": "5", "season_type": "5"},
@@ -177,7 +180,7 @@ class BilibiliCatalogPlugin(BasePlugin, CatalogProvider):
             source_name="哔哩哔哩",
             title=title,
             subtitle=self._build_subtitle(media_type, subtitle=subtitle),
-            cover_url=self._normalize_url(item.get("cover")),
+            cover_url=self._build_cover_url(item.get("cover")),
             media_type=media_type,  # type: ignore[arg-type]
             year=year,
             tags=tags,
@@ -221,6 +224,24 @@ class BilibiliCatalogPlugin(BasePlugin, CatalogProvider):
         if text.startswith("http://"):
             return f"https://{text[7:]}"
         return text
+
+    @classmethod
+    def _build_cover_url(cls, value: Any) -> str:
+        cover_url = cls._normalize_url(value)
+        if not cover_url:
+            return ""
+
+        base_url = str(os.getenv("BILIBILI_IMAGE_PROXY_BASE_URL") or "").strip().rstrip("/")
+        if base_url:
+            return (
+                f"{base_url}/api/video_ranking/proxy_image"
+                f"?url={quote(cover_url, safe='')}"
+                f"&referer={quote(BILIBILI_HEADERS['Referer'], safe='')}"
+                f"&user_agent={quote(BILIBILI_HEADERS['User-Agent'], safe='')}"
+            )
+
+        hostless = cover_url.removeprefix("https://").removeprefix("http://")
+        return f"https://images.weserv.nl/?url={quote(hostless, safe='')}"
 
     @staticmethod
     def _pick_value(item: dict[str, Any], *keys: str) -> str:
