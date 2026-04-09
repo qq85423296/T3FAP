@@ -1,46 +1,62 @@
 services:
   mysql:
     image: mysql:8.0
-    container_name: t3fap-mysql
+    container_name: t3fap_mysql
     restart: always
-    command:
-      - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_0900_ai_ci
     environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-t3mt_next}
-      MYSQL_USER: ${MYSQL_USER:-t3mt}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-change_me}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-change_root_me}
+      MYSQL_ROOT_PASSWORD: change_root_me
+      MYSQL_DATABASE: t3mt_next
+      MYSQL_USER: t3mt
+      MYSQL_PASSWORD: change_me
+      TZ: Asia/Shanghai
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
-      - ./mysql-data:/var/lib/mysql
+      - /vol2/1000/docker/t3fap/mysql-data:/var/lib/mysql
     healthcheck:
       test:
-        [
-          "CMD-SHELL",
-          "mysqladmin ping -h 127.0.0.1 -uroot -p\"$$MYSQL_ROOT_PASSWORD\" --silent",
-        ]
+        - CMD
+        - mysqladmin
+        - ping
+        - -h
+        - localhost
+        - -u
+        - t3mt
+        - -pchange_me
       interval: 10s
       timeout: 5s
-      retries: 12
-      start_period: 30s
+      retries: 20
+    networks:
+      - t3fap_net
 
   t3fap:
     image: ghcr.io/qq85423296/t3fap:latest
-    container_name: t3fap
+    container_name: t3fap_app
     restart: always
     depends_on:
       mysql:
         condition: service_healthy
-    command:
-      - sh
-      - -c
-      - alembic upgrade head && uvicorn apps.api.main:app --host 0.0.0.0 --port 8521
-    ports:
-      - "${T3FAP_PORT:-8521}:8521"
     environment:
-      # Replace this with the exact LAN IP or domain that browsers and media players use to reach T3FAP.
-      T3MT_PUBLIC_BASE_URL: ${T3MT_PUBLIC_BASE_URL:-http://127.0.0.1:8521}
-      T3MT_DATABASE_URL: mysql+pymysql://${MYSQL_USER:-t3mt}:${MYSQL_PASSWORD:-change_me}@mysql:3306/${MYSQL_DATABASE:-t3mt_next}?charset=utf8mb4
+      - T3MT_PUBLIC_BASE_URL=http://127.0.0.1:8521
+      - T3MT_DATABASE_URL=mysql+pymysql://t3mt:change_me@mysql:3306/t3mt_next
+      - TZ=Asia/Shanghai
+    command:
+      - /bin/bash
+      - -c
+      - |
+        echo "============================================"
+        echo "Skipping Alembic migration to avoid SQL syntax error (e3q8)"
+        echo "============================================"
+        # alembic upgrade head || echo "Migration skipped"
+        echo "Starting application..."
+        uvicorn apps.api.main:app --host 0.0.0.0 --port 8521
+    ports:
+      - ${T3FAP_PORT:-8521}:8521
     volumes:
-      - ./data:/app/storage
-      - ./downloads:/app/backend/downloads
+      - /vol2/1000/docker/t3fap/data:/app/storage
+      - /vol1/1000/downloads/t3mt/strm:/app/backend/downloads
+    networks:
+      - t3fap_net
+
+networks:
+  t3fap_net:
+    driver: bridge
