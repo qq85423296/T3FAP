@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import json
+import re
+from datetime import datetime, timezone
 from typing import Any
-from urllib.parse import quote
+from urllib.parse import quote, urljoin
 
 from core.sdk import (
     BasePlugin,
@@ -17,23 +20,28 @@ from core.sdk import (
     ResourceQueryResponse,
     ResourceSection,
 )
-from core.services.resource_http import fetch_json
+from core.services.resource_http import fetch_json, fetch_text
 
-IQIYI_TAG_URL = "https://mesh.if.iqiyi.com/portal/lw/videolib/tag"
 IQIYI_DATA_URL = "https://mesh.if.iqiyi.com/portal/lw/videolib/data"
 IQIYI_LEGACY_URL = "https://pcw-api.iqiyi.com/search/recommended/recommend/list"
+IQIYI_APP_VERSION = "17.042.25085"
 IQIYI_HEADERS = {
     "Accept": "application/json, text/plain, */*",
     "Origin": "https://www.iqiyi.com",
     "Referer": "https://www.iqiyi.com/",
     "User-Agent": "Mozilla/5.0",
 }
+IQIYI_PAGE_HEADERS = {
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Referer": "https://www.iqiyi.com/",
+    "User-Agent": "Mozilla/5.0",
+}
 IQIYI_SECTIONS = {
-    "movie": {"title": "电影", "channel_id": "1", "legacy_sort": "7"},
-    "tv": {"title": "电视剧", "channel_id": "2", "legacy_sort": "4"},
-    "variety": {"title": "综艺", "channel_id": "6", "legacy_sort": "1"},
-    "anime": {"title": "动漫", "channel_id": "4", "legacy_sort": "4"},
-    "documentary": {"title": "纪录片", "channel_id": "15", "legacy_sort": "4"},
+    "movie": {"title": "电影", "channel_id": "1", "legacy_sort": "7", "page_url": "https://www.iqiyi.com/dianying/"},
+    "tv": {"title": "电视剧", "channel_id": "2", "legacy_sort": "4", "page_url": "https://www.iqiyi.com/dianshiju/"},
+    "variety": {"title": "综艺", "channel_id": "6", "legacy_sort": "1", "page_url": "https://www.iqiyi.com/zongyi/"},
+    "anime": {"title": "动漫", "channel_id": "4", "legacy_sort": "4", "page_url": "https://www.iqiyi.com/dongman/"},
+    "documentary": {"title": "纪录片", "channel_id": "3", "legacy_sort": "4", "page_url": "https://www.iqiyi.com/jilupian/"},
 }
 IQIYI_MEDIA_LABELS = {
     "movie": "电影",
@@ -54,10 +62,11 @@ IQIYI_FILTERS = [
 class IqiyiCatalogPlugin(BasePlugin, CatalogProvider):
     plugin_id = "catalog.iqiyi"
     plugin_name = "爱奇艺探索"
-    plugin_version = "0.1.0"
+    plugin_version = "0.1.1"
 
     def __init__(self) -> None:
         self._detail_cache: dict[str, ResourceItem] = {}
+        self._section_cache: dict[str, list[dict[str, Any]]] = {}
 
     def health(self, ctx: dict[str, Any]) -> HealthReport:
         return HealthReport(status="ok", message="Iqiyi catalog plugin is ready.")
@@ -99,6 +108,24 @@ class IqiyiCatalogPlugin(BasePlugin, CatalogProvider):
         media_type = self._normalize_media_type(section or query.get("media_type"))
         page = max(int(query.get("page", 1) or 1), 1)
         page_size = max(min(int(query.get("page_size", 12) or 12), 60), 1)
+
+        raw_items = self._get_cached_section_items(media_type)
+        if raw_items:
+            total = len(raw_items)
+            start = (page - 1) * page_size
+            page_slice = raw_items[start : start + page_size]
+            items = [
+                self._map_item(item, media_type, ranking=start + index + 1)
+                for index, item in enumerate(page_slice)
+            ]
+            return ResourceListPage(
+                items=items,
+                page=page,
+                page_size=page_size,
+                total=total,
+                has_more=start + page_size < total,
+            )
+
         payload = self._fetch_page(media_type, page, page_size)
         raw_items, total = self._extract_items(payload, media_type)
         items = [
@@ -145,41 +172,66 @@ class IqiyiCatalogPlugin(BasePlugin, CatalogProvider):
             ),
         )
 
+    def _get_cached_section_items(self, media_type: str) -> list[dict[str, Any]]:
+        cached = self._section_cache.get(media_type)
+        if cached is not None:
+            return cached
+
+        try:
+            items = self._fetch_channel_page_items(media_type)
+        except Exception:
+            return []
+
+        if items:
+            self._section_cache[media_type] = items
+        return items
+
+    def _fetch_channel_page_items(self, media_type: str) -> list[dict[str, Any]]:
+        section_meta = IQIYI_SECTIONS[media_type]
+        page_url = str(section_meta["page_url"])
+        page_html = fetch_text(page_url, headers=IQIYI_PAGE_HEADERS)
+        preload_url = self._extract_preload_script_url(page_html, page_url)
+        preload_text = fetch_text(
+            preload_url,
+            headers={
+                "Referer": page_url,
+                "User-Agent": IQIYI_PAGE_HEADERS["User-Agent"],
+            },
+        )
+        payload = self._extract_preload_payload(preload_text)
+        return self._parse_video_items(payload, str(section_meta["channel_id"]))
+
     def _fetch_page(self, media_type: str, page: int, page_size: int) -> dict[str, Any]:
         section_meta = IQIYI_SECTIONS[media_type]
         try:
-            tag_payload = fetch_json(
-                IQIYI_TAG_URL,
+            payload = fetch_json(
+                IQIYI_DATA_URL,
                 params={
+                    "passport_id": "",
+                    "ret_num": max(page_size, 30),
+                    "pcv": IQIYI_APP_VERSION,
+                    "version": IQIYI_APP_VERSION,
+                    "device_id": "",
                     "channel_id": section_meta["channel_id"],
-                    "tagAdd": "",
-                    "selected_tag_name": "",
-                    "version": "14.024.24728",
-                    "device": "e263d61bb4dced863193e41b024025b2",
+                    "page_id": page,
+                    "os": "Windows 10",
+                    "conduit_id": "PPStream",
+                    "vip": 0,
+                    "auth": "",
+                    "recent_selected_tag": "",
+                    "ad": "",
+                    "adExt": "",
+                    "dfp": "",
                     "uid": "",
                 },
                 headers=IQIYI_HEADERS,
             )
-            session = self._extract_session(tag_payload)
-            params = {
-                "uid": "",
-                "passport_id": "",
-                "ret_num": max(page_size, 30),
-                "pcv": "14.024.24728",
-                "version": "14.024.24728",
-                "device_id": "e263d61bb4dced863193e41b024025b2",
-                "channel_id": section_meta["channel_id"],
-                "page_id": page,
-                "os": "10.0",
-                "conduit_id": "",
-                "vip": 0,
-                "auth": "",
-                "recent_selected_tag": "全部",
-            }
-            if session:
-                params["session"] = session
-            return fetch_json(IQIYI_DATA_URL, params=params, headers=IQIYI_HEADERS)
+            if self._parse_video_items(payload, str(section_meta["channel_id"])):
+                return payload
         except Exception:
+            pass
+
+        try:
             return fetch_json(
                 IQIYI_LEGACY_URL,
                 params={
@@ -192,6 +244,8 @@ class IqiyiCatalogPlugin(BasePlugin, CatalogProvider):
                 },
                 headers=IQIYI_HEADERS,
             )
+        except Exception:
+            return {}
 
     def _extract_items(self, payload: dict[str, Any], media_type: str) -> tuple[list[dict[str, Any]], int]:
         channel_id = IQIYI_SECTIONS[media_type]["channel_id"]
@@ -216,7 +270,9 @@ class IqiyiCatalogPlugin(BasePlugin, CatalogProvider):
     def _map_item(self, item: dict[str, Any], media_type: str, *, ranking: int) -> ResourceItem:
         raw_id = str(item.get("video_id") or item.get("title") or "").strip()
         title = str(item.get("title") or raw_id).strip()
-        detail_url = str(item.get("play_url") or "").strip() or self._build_search_url(title)
+        detail_url = self._normalize_url(item.get("play_url"))
+        if not detail_url.startswith("http"):
+            detail_url = self._build_search_url(title)
         cover_url = self._normalize_url(item.get("cover"))
         subtitle = str(item.get("subtitle") or "").strip()
         year = self._to_int(item.get("year"))
@@ -278,25 +334,6 @@ class IqiyiCatalogPlugin(BasePlugin, CatalogProvider):
         return media_type
 
     @staticmethod
-    def _extract_session(payload: dict[str, Any]) -> str:
-        for path in (
-            ("data", "session"),
-            ("data", "session_id"),
-            ("session",),
-            ("session_id",),
-            ("data", "next", "session"),
-        ):
-            current: Any = payload
-            for key in path:
-                if not isinstance(current, dict) or key not in current:
-                    current = None
-                    break
-                current = current[key]
-            if current not in (None, ""):
-                return str(current)
-        return ""
-
-    @staticmethod
     def _extract_total(payload: dict[str, Any]) -> int:
         for path in (
             ("data", "total"),
@@ -317,6 +354,21 @@ class IqiyiCatalogPlugin(BasePlugin, CatalogProvider):
 
     @staticmethod
     def _collect_candidate_items(payload: dict[str, Any]) -> list[dict[str, Any]]:
+        channel_page_items: list[dict[str, Any]] = []
+        blocks = payload.get("items")
+        if isinstance(blocks, list):
+            for block in blocks:
+                if not isinstance(block, dict):
+                    continue
+                for video_group in block.get("video", []) or []:
+                    if not isinstance(video_group, dict):
+                        continue
+                    data = video_group.get("data", []) or []
+                    if isinstance(data, list):
+                        channel_page_items.extend(entry for entry in data if isinstance(entry, dict))
+        if channel_page_items:
+            return channel_page_items
+
         candidates: list[dict[str, Any]] = []
         for path in (
             ("data", "list"),
@@ -367,6 +419,8 @@ class IqiyiCatalogPlugin(BasePlugin, CatalogProvider):
         video_id = str(
             item.get("albumId")
             or item.get("album_id")
+            or item.get("entity_id")
+            or item.get("tv_id")
             or item.get("qipuId")
             or item.get("qipu_id")
             or item.get("id")
@@ -386,28 +440,109 @@ class IqiyiCatalogPlugin(BasePlugin, CatalogProvider):
             "video_id": video_id,
             "title": title,
             "cover": item.get("imageUrl")
+            or item.get("image_cover")
+            or item.get("image_url_normal")
             or item.get("image_url")
+            or item.get("image_url_pcw")
             or item.get("poster")
             or item.get("pic")
             or item.get("image")
             or "",
             "subtitle": item.get("subtitle")
             or item.get("subTitle")
+            or item.get("dq_updatestatus")
+            or item.get("firstEpisodeTitle")
+            or item.get("showDate")
             or item.get("desc")
             or item.get("description")
             or "",
             "type": item.get("videoType")
+            or item.get("content_type")
             or item.get("channelName")
             or item.get("type")
             or "",
-            "score": item.get("score") or item.get("hotNum") or "",
-            "year": item.get("year") or item.get("albumYear") or "",
-            "play_url": item.get("playUrl")
+            "score": item.get("score") or item.get("hotNum") or item.get("hot_score") or item.get("sns_score") or "",
+            "year": item.get("year") or item.get("albumYear") or IqiyiCatalogPlugin._extract_year(item) or "",
+            "play_url": item.get("page_url")
             or item.get("pageUrl")
+            or item.get("playUrl")
             or item.get("url")
             or item.get("jumpUrl")
             or "",
         }
+
+    @staticmethod
+    def _extract_preload_script_url(page_html: str, page_url: str) -> str:
+        matched = re.search(r'<script[^>]+src="([^"]*?/prelw/portal/lw/v\d+/channel/[^"]+)"', page_html)
+        if not matched:
+            raise ValueError("iqiyi preload script not found")
+        return urljoin(page_url, matched.group(1))
+
+    @staticmethod
+    def _extract_preload_payload(script_text: str) -> dict[str, Any]:
+        marker = "response:"
+        marker_index = script_text.find(marker)
+        if marker_index < 0:
+            raise ValueError("iqiyi preload payload marker not found")
+
+        brace_index = script_text.find("{", marker_index + len(marker))
+        if brace_index < 0:
+            raise ValueError("iqiyi preload payload start not found")
+
+        end_index = IqiyiCatalogPlugin._find_json_object_end(script_text, brace_index)
+        if end_index < 0:
+            raise ValueError("iqiyi preload payload end not found")
+
+        return json.loads(script_text[brace_index : end_index + 1])
+
+    @staticmethod
+    def _find_json_object_end(text: str, start_index: int) -> int:
+        depth = 0
+        in_string = False
+        escaped = False
+        for index, char in enumerate(text[start_index:], start_index):
+            if in_string:
+                if escaped:
+                    escaped = False
+                elif char == "\\":
+                    escaped = True
+                elif char == '"':
+                    in_string = False
+                continue
+            if char == '"':
+                in_string = True
+                continue
+            if char == "{":
+                depth += 1
+                continue
+            if char == "}":
+                depth -= 1
+                if depth == 0:
+                    return index
+        return -1
+
+    @staticmethod
+    def _extract_year(item: dict[str, Any]) -> int | None:
+        direct_year = IqiyiCatalogPlugin._to_int(item.get("year") or item.get("albumYear"))
+        if direct_year:
+            return direct_year
+
+        date_info = item.get("date")
+        if isinstance(date_info, dict):
+            year = IqiyiCatalogPlugin._to_int(date_info.get("year"))
+            if year:
+                return year
+
+        show_date = str(item.get("showDate") or "").strip()
+        matched = re.search(r"(19|20)\d{2}", show_date)
+        if matched:
+            return int(matched.group(0))
+
+        publish_timestamp = IqiyiCatalogPlugin._to_int(item.get("qiyiPublishDate"))
+        if publish_timestamp and publish_timestamp > 10_000:
+            return datetime.fromtimestamp(publish_timestamp / 1000, tz=timezone.utc).year
+
+        return None
 
     @staticmethod
     def _normalize_url(url: Any) -> str:
