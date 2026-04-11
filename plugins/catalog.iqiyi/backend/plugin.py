@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 from datetime import datetime, timezone
 from typing import Any
@@ -62,7 +63,7 @@ IQIYI_FILTERS = [
 class IqiyiCatalogPlugin(BasePlugin, CatalogProvider):
     plugin_id = "catalog.iqiyi"
     plugin_name = "爱奇艺探索"
-    plugin_version = "0.1.1"
+    plugin_version = "0.1.2"
 
     def __init__(self) -> None:
         self._detail_cache: dict[str, ResourceItem] = {}
@@ -273,7 +274,7 @@ class IqiyiCatalogPlugin(BasePlugin, CatalogProvider):
         detail_url = self._normalize_url(item.get("play_url"))
         if not detail_url.startswith("http"):
             detail_url = self._build_search_url(title)
-        cover_url = self._normalize_url(item.get("cover"))
+        cover_url = self._build_cover_url(item.get("cover"))
         subtitle = str(item.get("subtitle") or "").strip()
         year = self._to_int(item.get("year"))
         score = str(item.get("score") or "").strip()
@@ -332,6 +333,24 @@ class IqiyiCatalogPlugin(BasePlugin, CatalogProvider):
         if media_type not in IQIYI_SECTIONS:
             return "tv"
         return media_type
+
+    @classmethod
+    def _build_cover_url(cls, value: Any) -> str:
+        cover_url = cls._normalize_url(value)
+        if not cover_url:
+            return ""
+
+        base_url = str(os.getenv("IQIYI_IMAGE_PROXY_BASE_URL") or "").strip().rstrip("/")
+        if base_url:
+            return (
+                f"{base_url}/api/video_ranking/proxy_image"
+                f"?url={quote(cover_url, safe='')}"
+                f"&referer={quote(IQIYI_HEADERS['Referer'], safe='')}"
+                f"&user_agent={quote(IQIYI_HEADERS['User-Agent'], safe='')}"
+            )
+
+        hostless = cover_url.removeprefix("https://").removeprefix("http://")
+        return f"https://images.weserv.nl/?url={quote(hostless, safe='')}"
 
     @staticmethod
     def _extract_total(payload: dict[str, Any]) -> int:
