@@ -10,6 +10,7 @@ from core.sdk import (
     CatalogProvider,
     HealthReport,
     OfficialLink,
+    ResourceAction,
     ResourceCapabilities,
     ResourceFilterGroup,
     ResourceFilterOption,
@@ -138,7 +139,10 @@ class YoukuCatalogPlugin(BasePlugin, CatalogProvider):
                 searchable=True,
                 official_searchable=bool(detail_url),
                 share_searchable=True,
+                downloadable=bool(detail_url),
+                strmable=bool(detail_url),
             ),
+            actions=self._build_task_actions(),
         )
 
     def _fetch_page(self, media_type: str, page: int) -> dict[str, Any]:
@@ -228,7 +232,10 @@ class YoukuCatalogPlugin(BasePlugin, CatalogProvider):
                 searchable=True,
                 official_searchable=bool(detail_url),
                 share_searchable=True,
+                downloadable=bool(detail_url),
+                strmable=bool(detail_url),
             ),
+            actions=self._build_task_actions(),
             meta={
                 "ranking": ranking,
                 "summary": summary,
@@ -302,6 +309,26 @@ class YoukuCatalogPlugin(BasePlugin, CatalogProvider):
             return max(int(str(cursor).strip()), 1)
         except (TypeError, ValueError):
             return 1
+
+    @staticmethod
+    def _build_task_actions() -> list[ResourceAction]:
+        return [
+            ResourceAction(
+                key="task.video_download.create",
+                label="褰辫涓嬭浇",
+                type="task",
+                style="primary",
+                target_plugin_id="task.video_download",
+                payload={"template_key": "video_download"},
+            ),
+            ResourceAction(
+                key="task.strm.create",
+                label="鐢熸垚STRM",
+                type="task",
+                target_plugin_id="task.strm",
+                payload={"template_key": "strm_generate"},
+            ),
+        ]
 
 
 plugin = YoukuCatalogPlugin()
