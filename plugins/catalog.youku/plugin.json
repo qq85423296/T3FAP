@@ -1,7 +1,7 @@
 {
   "id": "catalog.youku",
   "name": "优酷探索",
-  "version": "0.1.0",
+  "version": "0.1.8",
   "category": "catalog",
   "description": "让资源中心支持浏览优酷的剧集、电影、综艺和动漫目录。",
   "core_version": ">=1.0.0 <2.0.0",
