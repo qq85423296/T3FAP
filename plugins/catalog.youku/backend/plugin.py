@@ -50,7 +50,7 @@ YOUKU_FILTERS = [
 class YoukuCatalogPlugin(BasePlugin, CatalogProvider):
     plugin_id = "catalog.youku"
     plugin_name = "优酷探索"
-    plugin_version = "0.1.0"
+    plugin_version = "0.1.9"
 
     def __init__(self) -> None:
         self._detail_cache: dict[str, ResourceItem] = {}

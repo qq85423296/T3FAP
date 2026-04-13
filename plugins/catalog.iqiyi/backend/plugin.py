@@ -64,7 +64,7 @@ IQIYI_FILTERS = [
 class IqiyiCatalogPlugin(BasePlugin, CatalogProvider):
     plugin_id = "catalog.iqiyi"
     plugin_name = "爱奇艺探索"
-    plugin_version = "0.1.2"
+    plugin_version = "0.1.3"
 
     def __init__(self) -> None:
         self._detail_cache: dict[str, ResourceItem] = {}
