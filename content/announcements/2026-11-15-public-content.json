@@ -1,0 +1,19 @@
+{
+  "id": "public-content-sync",
+  "title": "公告与更新日志已支持自动同步",
+  "content": "公告和更新日志现在通过 GitHub Pages 发布。应用会自动检查更新并保存到本机；网络暂时不可用时，仍可查看最近一次同步的内容。",
+  "type": "notice",
+  "status": "published",
+  "show_popup": false,
+  "show_every_visit": false,
+  "require_agreement": false,
+  "allow_skip_next_prompt": false,
+  "show_badge": true,
+  "action_label": "查看公开仓库",
+  "action_url": "https://github.com/qq85423296/T3FAP",
+  "action_target": "blank",
+  "published_at": "2026-11-15T01:00:00+08:00",
+  "expired_at": null,
+  "created_at": "2026-11-15T01:00:00+08:00",
+  "updated_at": "2026-11-15T01:00:00+08:00"
+}

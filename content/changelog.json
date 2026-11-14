@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-11-15T01:00:00+08:00",
+  "items": [
+    {
+      "id": "v2.8-public-content",
+      "title": "T3FAP v2.8 更新",
+      "content": "新增：更新日志与公告支持 GitHub Pages 自动发布\n新增：公开内容自动同步并缓存到用户本机\n优化：官网解析新增接口默认启用 AES 内容加密\n优化：官网解析新增接口默认请求超时调整为 60 秒",
+      "status": "published",
+      "published_at": "2026-11-15T01:00:00+08:00",
+      "updated_at": "2026-11-15T01:00:00+08:00",
+      "created_at": "2026-11-15T01:00:00+08:00",
+      "action_label": "查看公开仓库",
+      "action_url": "https://github.com/qq85423296/T3FAP",
+      "action_target": "blank"
+    }
+  ]
+}
