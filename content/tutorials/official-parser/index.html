@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="zh-CN" data-type="software" data-radius="soft" data-buttons="soft" data-motion="quiet">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="page-type" content="software">
+  <meta name="site-kind" content="software">
+  <meta name="description" content="T3FAP 官网解析插件配置教程：注册 T3MT 用户中心，获取 API 接口与 API Key，完成插件保存、测试，并使用官网下载和在线播放。">
+  <title>官网解析插件配置教程｜T3FAP</title>
+  <style>
+    :root {
+      --bg: #f3f2ee;
+      --surface: #ffffff;
+      --surface-soft: #e8ede7;
+      --ink: #202a23;
+      --muted: #606b63;
+      --line: #d4dad3;
+      --accent: #365f49;
+      --accent-dark: #264936;
+      --accent-soft: #dce9df;
+      --warning: #795616;
+      --warning-bg: #fff5d9;
+      --dark: #111a27;
+      --radius: 22px;
+      --wrap: 1160px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif; line-height: 1.75; }
+    a { color: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    a:focus-visible, summary:focus-visible { outline: 3px solid #73947f; outline-offset: 4px; }
+    img { display: block; max-width: 100%; }
+    .wrap { width: min(calc(100% - 48px), var(--wrap)); margin-inline: auto; }
+    .site-header { min-height: 72px; display: flex; align-items: center; border-bottom: 1px solid var(--line); background: rgba(243, 242, 238, .96); position: sticky; top: 0; z-index: 10; backdrop-filter: blur(14px); }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 800; letter-spacing: -.02em; }
+    .brand-mark { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 11px; background: var(--accent); color: white; font: 800 13px/1 ui-monospace, monospace; }
+    .brand small { color: var(--muted); font-size: 12px; font-weight: 500; letter-spacing: 0; }
+    .header-link { font-size: 14px; font-weight: 700; text-decoration: none; border-bottom: 1px solid transparent; }
+    .header-link:hover { border-color: currentColor; }
+    .hero { min-height: calc(100svh - 72px); display: grid; align-items: center; padding-block: 72px; }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr); gap: 72px; align-items: center; }
+    .kicker { margin: 0 0 18px; color: var(--accent); font: 700 13px/1.4 ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 650px; margin-bottom: 24px; font-size: clamp(42px, 5.1vw, 72px); line-height: 1.08; letter-spacing: -.055em; }
+    h2 { margin-bottom: 20px; font-size: clamp(30px, 3.4vw, 48px); line-height: 1.16; letter-spacing: -.04em; }
+    h3 { margin-bottom: 10px; font-size: 20px; line-height: 1.4; }
+    .lead { max-width: 600px; margin-bottom: 30px; color: var(--muted); font-size: 18px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .button { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; gap: 8px; padding: 11px 20px; border: 1px solid var(--accent); border-radius: 13px; background: var(--accent); color: white; font-weight: 700; text-decoration: none; transition: transform .18s ease, background .18s ease, box-shadow .18s ease; }
+    .button:hover { transform: translateY(-2px); background: var(--accent-dark); box-shadow: 0 8px 18px rgba(38, 73, 54, .14); }
+    .button:active { transform: translateY(0); box-shadow: none; }
+    .button.secondary { background: transparent; color: var(--accent); border-color: var(--line); }
+    .button.secondary:hover { background: var(--surface); }
+    .hero-facts { display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 30px 0 0; padding: 0; list-style: none; color: var(--muted); font-size: 14px; }
+    .hero-facts strong { color: var(--ink); font-size: 20px; margin-right: 5px; }
+    .flow-frame { padding: 14px; border: 1px solid var(--line); border-radius: 30px; background: var(--surface); box-shadow: 0 24px 60px rgba(32, 42, 35, .08); }
+    .flow-frame img { width: 100%; height: auto; border-radius: 20px; }
+    .guide-section { min-height: 100svh; display: grid; align-items: center; padding-block: 96px; border-top: 1px solid var(--line); }
+    .guide-section:nth-child(odd) { background: var(--surface-soft); }
+    .section-head { max-width: 780px; margin-bottom: 48px; }
+    .section-head p:last-child { margin-bottom: 0; color: var(--muted); font-size: 17px; }
+    .two-col { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 64px; align-items: center; }
+    .steps { margin: 0; padding: 0; list-style: none; counter-reset: guide; }
+    .steps > li { position: relative; padding: 0 0 28px 54px; counter-increment: guide; }
+    .steps > li::before { content: counter(guide); position: absolute; left: 0; top: 1px; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--accent); color: white; font: 700 15px/1 ui-monospace, monospace; }
+    .steps > li:not(:last-child)::after { content: ""; position: absolute; left: 16px; top: 42px; bottom: 7px; width: 1px; background: #b9c6bb; }
+    .steps strong { display: block; margin-bottom: 5px; font-size: 18px; }
+    .steps p { margin-bottom: 0; color: var(--muted); }
+    .info-panel { padding: 30px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+    .info-panel.dark { background: var(--dark); color: #f4f7fb; border-color: #273449; }
+    .info-panel.dark p { color: #b6c1cf; }
+    .info-label { display: block; margin-bottom: 8px; color: var(--muted); font: 700 12px/1.4 ui-monospace, monospace; letter-spacing: .1em; text-transform: uppercase; }
+    .dark .info-label { color: #8fd4b4; }
+    .copy-row { padding: 18px 0; border-top: 1px solid var(--line); }
+    .copy-row:first-of-type { border-top: 0; }
+    .copy-row strong { display: block; margin-bottom: 4px; }
+    .copy-row p { margin: 0; color: var(--muted); font-size: 14px; }
+    code { padding: .15em .4em; border-radius: 6px; background: #e4e8e3; font-family: ui-monospace, "Cascadia Code", monospace; font-size: .92em; overflow-wrap: anywhere; }
+    .dark code { background: #243145; color: #d9e7ef; }
+    .note { margin-top: 28px; padding: 20px 22px; border-left: 4px solid var(--accent); border-radius: 0 14px 14px 0; background: var(--accent-soft); }
+    .note.warning { border-color: #bc8926; background: var(--warning-bg); color: var(--warning); }
+    .note strong { display: block; margin-bottom: 5px; }
+    .note p:last-child { margin-bottom: 0; }
+    .screenshot { margin: 0; padding: 16px; border: 1px solid #2a394d; border-radius: 24px; background: var(--dark); box-shadow: 0 24px 54px rgba(17, 26, 39, .16); }
+    .screenshot img { width: 100%; height: auto; border-radius: 12px; }
+    .screenshot.contain { display: grid; place-items: center; }
+    .screenshot.contain img { width: auto; max-width: 100%; }
+    .field-list { margin: 0; }
+    .field-list > div { display: grid; grid-template-columns: 150px 1fr; gap: 22px; padding: 18px 0; border-top: 1px solid var(--line); }
+    .field-list > div:first-child { border-top: 0; }
+    .field-list dt { font-weight: 800; }
+    .field-list dd { margin: 0; color: var(--muted); }
+    .save-check { display: grid; gap: 12px; margin-top: 26px; }
+    .save-check span { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+    .save-check span::before { content: "✓"; display: grid; place-items: center; width: 25px; height: 25px; border-radius: 50%; background: var(--accent); color: white; }
+    .test-ui { overflow: hidden; border: 1px solid #2b3b50; border-radius: var(--radius); background: var(--dark); color: #eef3f8; }
+    .test-ui-head { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 20px 24px; border-bottom: 1px solid #2b3b50; }
+    .test-ui-head strong { font-size: 18px; }
+    .test-ui-body { padding: 24px; }
+    .test-label { display: block; margin-bottom: 8px; color: #aebdcc; font-size: 13px; }
+    .test-input { padding: 14px 16px; border: 1px solid #3a4b61; border-radius: 10px; color: #c6d1dc; background: #172235; font-size: 14px; }
+    .test-result { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+    .test-result span { padding: 14px; border-radius: 10px; background: #172235; color: #b9c6d2; font-size: 13px; }
+    .test-result strong { display: block; margin-top: 4px; color: #80d9ae; font-size: 17px; }
+    .status-pill { flex: none; padding: 4px 10px; border-radius: 999px; background: #163d31; color: #8ce0b5; font-size: 12px; font-weight: 700; }
+    .faq-list { display: grid; gap: 12px; }
+    details { border: 1px solid var(--line); border-radius: 16px; background: var(--surface); }
+    summary { cursor: pointer; padding: 20px 24px; font-weight: 800; list-style-position: inside; }
+    details p { margin: 0; padding: 0 24px 22px; color: var(--muted); }
+    .final-action { margin-top: 36px; padding: 30px; border-radius: var(--radius); background: var(--accent); color: white; }
+    .final-action p { max-width: 760px; color: #e2eee6; }
+    .final-action .button { background: white; color: var(--accent-dark); border-color: white; }
+    .site-footer { padding: 30px 0 40px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+    .footer-inner { display: flex; justify-content: space-between; gap: 24px; }
+    .site-footer a { text-underline-offset: 3px; }
+    @media (max-width: 900px) {
+      .hero-grid, .two-col { grid-template-columns: 1fr; gap: 42px; }
+      .hero { padding-block: 56px; }
+      .guide-section { min-height: auto; padding-block: 80px; }
+      .flow-frame { max-width: 680px; }
+      .screenshot { max-width: 720px; }
+    }
+    @media (max-width: 560px) {
+      .wrap { width: min(calc(100% - 32px), var(--wrap)); }
+      .site-header { min-height: 64px; }
+      .brand small, .header-link { display: none; }
+      .hero { min-height: calc(100svh - 64px); padding-block: 42px; }
+      h1 { font-size: 42px; }
+      .lead { font-size: 16px; }
+      .actions { display: grid; }
+      .button { width: 100%; }
+      .hero-facts { display: grid; grid-template-columns: 1fr 1fr; }
+      .flow-frame { padding: 8px; border-radius: 20px; }
+      .guide-section { padding-block: 64px; }
+      .section-head { margin-bottom: 32px; }
+      .two-col { gap: 34px; }
+      .info-panel { padding: 22px; }
+      .field-list > div { grid-template-columns: 1fr; gap: 5px; }
+      .test-ui-head { align-items: flex-start; }
+      .test-result { grid-template-columns: 1fr; }
+      .footer-inner { display: grid; }
+      .screenshot { padding: 9px; border-radius: 18px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .button { transition: none; }
+    }
+    @media print {
+      .site-header, .actions, .final-action { display: none; }
+      .hero, .guide-section { min-height: auto; padding-block: 32px; }
+      .guide-section { break-inside: avoid; }
+      body { background: white; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Software documentation; sage system, soft radius, split hero, real product UI; no external scripts or effects. -->
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="../../" aria-label="返回 T3FAP 首页">
+        <span class="brand-mark" aria-hidden="true">T3</span>
+        <span>T3FAP <small>官网解析配置</small></span>
+      </a>
+      <a class="header-link" href="https://github.com/qq85423296/T3FAP" target="_blank" rel="noopener noreferrer">GitHub 项目 ↗</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="kicker">T3FAP 3.0 · 可选增强功能</p>
+          <h1>官网解析插件<br>配置教程</h1>
+          <p class="lead">使用 T3MT 解析平台提供的 API 接口和 API Key，完成官网解析配置，即可使用官网下载和在线播放服务。</p>
+          <div class="actions">
+            <a class="button" href="http://api.t3mt.com/" target="_blank" rel="noopener noreferrer">打开 T3MT 用户中心 ↗</a>
+            <a class="button secondary" href="#prepare">查看配置步骤</a>
+          </div>
+          <ul class="hero-facts" aria-label="配置概况">
+            <li><strong>2</strong> 项 API 信息</li>
+            <li><strong>2</strong> 次保存</li>
+            <li><strong>1</strong> 次接口测试</li>
+          </ul>
+        </div>
+        <div class="flow-frame">
+          <img src="assets/configuration-flow.svg" width="1200" height="280" alt="注册平台、复制接口和密钥、添加并保存、测试后使用的完整流程">
+        </div>
+      </div>
+    </section>
+
+    <section class="guide-section" id="prepare">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">01 · 准备 API 信息</p>
+          <h2>注册平台，复制接口和 API Key</h2>
+          <p>T3MT 是推荐的可选第三方解析平台，可按平台当前规则免费注册使用。邀请码可向群友获取。</p>
+        </div>
+        <div class="two-col">
+          <ol class="steps">
+            <li>
+              <strong>打开用户中心并注册</strong>
+              <p>访问 <code>http://api.t3mt.com/</code>，按页面提示填写注册信息和邀请码。邀请码不是 API Key。</p>
+            </li>
+            <li>
+              <strong>登录并生成 API Key</strong>
+              <p>进入用户中心，找到 API 或解析接口相关页面，按页面提示生成自己的 API Key。</p>
+            </li>
+            <li>
+              <strong>分别复制两项信息</strong>
+              <p>复制平台展示的完整 API 接口地址和刚生成的 API Key，暂时保存在自己的安全位置。</p>
+            </li>
+          </ol>
+          <div>
+            <div class="info-panel dark">
+              <span class="info-label">需要准备的两项信息</span>
+              <div class="copy-row">
+                <strong>① 完整 API 接口地址</strong>
+                <p>必须复制平台提供的完整接口，不是用户中心首页，也不要自行添加接口路径。</p>
+              </div>
+              <div class="copy-row">
+                <strong>② 自己的 API Key</strong>
+                <p>每个账号单独生成。不要借用他人密钥，也不要把密钥截图发到群聊。</p>
+              </div>
+            </div>
+            <aside class="note warning">
+              <strong>保持平台给出的地址格式</strong>
+              <p>当前用户中心使用 HTTP 地址。请完整复制，不要自行改成 HTTPS；如果平台后续提供新地址，以平台页面为准。</p>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="guide-section" id="plugin">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">02 · 打开官网解析</p>
+          <h2>从插件中心进入配置</h2>
+          <p>登录 T3FAP 后，在左侧菜单打开“插件中心”，找到“官网解析”。</p>
+        </div>
+        <div class="two-col">
+          <div>
+            <ol class="steps">
+              <li>
+                <strong>确认插件可以运行</strong>
+                <p>如果插件尚未安装或启动，先完成安装并点击“启动”。卡片显示“运行中”后再继续。</p>
+              </li>
+              <li>
+                <strong>点击“配置”</strong>
+                <p>在“官网解析”卡片上点击“配置”，进入“官网解析配置”窗口。</p>
+              </li>
+              <li>
+                <strong>点击右上角“添加”</strong>
+                <p>在“官网解析接口”列表中新增一条接口，不要改动其他无关插件。</p>
+              </li>
+            </ol>
+            <aside class="note">
+              <strong>官网解析是可选增强插件</strong>
+              <p>不配置第三方解析平台时，T3FAP 3.0 的核心功能仍可独立运行。</p>
+            </aside>
+          </div>
+          <figure class="screenshot contain">
+            <img src="assets/02-plugin-card.png" width="552" height="234" loading="lazy" alt="T3FAP 插件中心里的官网解析卡片，包含配置按钮">
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="guide-section" id="configure">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">03 · 填写并保存</p>
+          <h2>填写两项信息，完成两次保存</h2>
+          <p>“添加到列表”只保存当前草稿；返回接口列表后，还必须点击“保存配置”才会正式生效。</p>
+        </div>
+        <div class="two-col">
+          <figure class="screenshot">
+            <img src="assets/03-add-parser-api.png" width="720" height="588" loading="lazy" alt="添加解析接口真实窗口，包含接口名称、接口地址、API Key、内容加密和已上线选项">
+          </figure>
+          <div>
+            <dl class="field-list">
+              <div><dt>接口名称</dt><dd>便于自己识别即可，例如“T3MT 免费解析”。</dd></div>
+              <div><dt>接口地址</dt><dd>粘贴第一步复制的完整 API 接口地址，不要填写视频网址。</dd></div>
+              <div><dt>API Key</dt><dd>粘贴自己生成的密钥。密钥只写不读，保存后不会明文显示。</dd></div>
+              <div><dt>内容加密（AES）</dt><dd>新版本默认开启。先保持默认，只有平台明确要求关闭时才调整。</dd></div>
+              <div><dt>状态</dt><dd>保持“已上线”。高级配置可先使用默认值。</dd></div>
+            </dl>
+            <div class="save-check" aria-label="两次保存检查">
+              <span>第一次：点击“添加到列表”</span>
+              <span>第二次：返回列表，点击“保存配置”</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="guide-section" id="test">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">04 · 测试并使用</p>
+          <h2>先测试接口，再使用解析服务</h2>
+          <p>测试通过后，返回支持官网解析的资源详情页，即可按页面提供的入口使用官网下载和在线播放。</p>
+        </div>
+        <div class="two-col">
+          <div class="test-ui" aria-label="接口测试界面示意">
+            <div class="test-ui-head"><strong>官网解析接口 · T3MT 免费解析</strong><span class="status-pill">已上线</span></div>
+            <div class="test-ui-body">
+              <span class="test-label">测试媒体地址</span>
+              <div class="test-input">在这里填写要解析的官方视频页面地址</div>
+              <div class="test-result">
+                <span>返回结果<strong>成功</strong></span>
+                <span>检查项目<strong>最终媒体地址已返回</strong></span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <ol class="steps">
+              <li>
+                <strong>填写“测试媒体地址”</strong>
+                <p>这里填写要解析的官方视频页面地址，不是 API 接口地址。</p>
+              </li>
+              <li>
+                <strong>点击对应接口的“测试”</strong>
+                <p>等待测试结束，检查“返回结果”和“最终媒体地址”。</p>
+              </li>
+              <li>
+                <strong>测试成功后再使用</strong>
+                <p>回到资源详情页选择官网下载或在线播放。实际入口以资源类型和页面能力为准。</p>
+              </li>
+            </ol>
+            <aside class="note warning">
+              <strong>测试失败时先检查这四项</strong>
+              <p>接口地址是否完整、API Key 是否正确、接口是否“已上线”、列表底部是否已点击“保存配置”。排查时不要把真实密钥发到公开群聊。</p>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="guide-section" id="faq">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">05 · 常见问题</p>
+          <h2>配置后仍然不能用？</h2>
+          <p>先按下面逐项检查，大多数问题来自地址填错、密钥失效或漏掉最后一次保存。</p>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary>把用户中心首页填进“接口地址”为什么不行？</summary>
+            <p>插件需要的是平台提供的完整 API 接口，不是 <code>http://api.t3mt.com/</code> 首页。请回到用户中心复制专门展示的接口地址，不要自行猜测或拼接路径。</p>
+          </details>
+          <details>
+            <summary>已经点击“添加到列表”，为什么还是不生效？</summary>
+            <p>这一步只把接口加入当前草稿。关闭新增窗口后，还要在官网解析接口列表中点击“保存配置”，看到保存成功提示后再测试。</p>
+          </details>
+          <details>
+            <summary>“测试媒体地址”应该填写什么？</summary>
+            <p>填写你想解析的官方视频页面地址。API 接口用于连接解析平台，测试媒体地址用于验证解析结果，两者不能填反。</p>
+          </details>
+          <details>
+            <summary>API Key 可以发到群里让别人帮忙配置吗？</summary>
+            <p>不可以。API Key 相当于账号凭据，泄露后可能被他人占用额度。已经泄露时，请立即在用户中心重新生成，并同步更新插件配置。</p>
+          </details>
+          <details>
+            <summary>不配置这个第三方平台，还能使用 T3FAP 3.0 吗？</summary>
+            <p>可以。官网解析是可选增强功能，不配置它不影响 T3FAP 3.0 的免费政策和核心功能独立运行。第三方平台的可用性与免费规则以该平台当前页面为准。</p>
+          </details>
+          <details>
+            <summary>有多个解析接口时，会按什么顺序使用？</summary>
+            <p>接口按优先级从小到大依次尝试，当前接口失败时可自动切换到下一个“已上线”接口。可在接口列表拖动排序，调整后记得再次保存配置。</p>
+          </details>
+        </div>
+        <div class="final-action">
+          <h3>准备好后，从第一步开始</h3>
+          <p>先注册并复制两项信息，再到“插件中心 → 官网解析 → 配置”完成添加、保存和测试。</p>
+          <a class="button" href="http://api.t3mt.com/" target="_blank" rel="noopener noreferrer">打开 T3MT 用户中心 ↗</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <span>T3FAP 官网解析配置教程 · 更新于 2026-11-15</span>
+      <span>界面截图来自 T3FAP 3.0 · <a href="https://github.com/qq85423296/T3FAP" target="_blank" rel="noopener noreferrer">公开项目仓库</a></span>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,7 +1,10 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-15T01:00:00+08:00",
+  "updated_at": "2026-11-15T03:05:00+08:00",
   "items": [
+    {
+      "file": "2026-11-15-t3fap-3-free.json"
+    },
     {
       "file": "2026-11-15-public-content.json"
     }

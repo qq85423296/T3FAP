@@ -1,0 +1,19 @@
+{
+  "id": "t3fap-3-0-full-free-upgrade",
+  "title": "重要公告｜T3FAP 3.0 全面升级，全部功能永久免费",
+  "content": "为彻底解决近期服务器故障带来的影响，T3FAP 已完成 3.0 版本的全面升级。此次升级在修复服务稳定性的同时，也重新调整了功能开放策略：\n\n1. 全部功能永久免费：自 3.0 起移除所有 Pro 特权和付费限制，原 Pro 功能全部免费开放，不再设置 Pro 专属功能。\n2. 性能全面优化：优化核心流程、资源利用与响应速度，提升整体运行效率和稳定性。\n3. 核心功能独立运行：不再依赖第三方服务，降低外部平台异常对正常使用的影响。\n\n请所有用户尽快升级到 3.0。升级前建议备份配置和重要数据；升级后请检查插件配置与任务状态，确认各项功能运行正常。\n\n说明：“官网解析”等可选第三方增强插件需按各自教程单独配置，不影响 T3FAP 3.0 全部功能免费开放，也不影响核心功能独立运行。",
+  "type": "important",
+  "status": "published",
+  "show_popup": true,
+  "show_every_visit": false,
+  "require_agreement": false,
+  "allow_skip_next_prompt": true,
+  "show_badge": true,
+  "action_label": "查看 T3FAP 3.0 项目",
+  "action_url": "https://github.com/qq85423296/T3FAP",
+  "action_target": "blank",
+  "published_at": "2026-11-15T03:05:00+08:00",
+  "expired_at": null,
+  "created_at": "2026-11-15T03:05:00+08:00",
+  "updated_at": "2026-11-15T03:05:00+08:00"
+}

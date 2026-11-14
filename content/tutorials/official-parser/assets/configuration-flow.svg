@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="280" viewBox="0 0 1200 280" role="img" aria-labelledby="title desc">
+  <title id="title">官网解析插件配置流程</title>
+  <desc id="desc">注册 T3MT 用户中心，获取 API 接口和 API Key，在官网解析插件中添加并保存，测试成功后使用官网下载和在线播放。</desc>
+  <rect width="1200" height="280" rx="28" fill="#e9eee8"/>
+  <g font-family="Microsoft YaHei, PingFang SC, sans-serif">
+    <g transform="translate(42 48)">
+      <rect width="246" height="184" rx="22" fill="#fff" stroke="#cbd6c9"/>
+      <circle cx="36" cy="36" r="19" fill="#49634b"/><text x="36" y="43" text-anchor="middle" font-size="20" font-weight="700" fill="#fff">1</text>
+      <text x="24" y="88" font-size="24" font-weight="700" fill="#253329">注册解析平台</text>
+      <text x="24" y="124" font-size="18" fill="#5d6b60">使用邀请码完成注册</text>
+      <text x="24" y="153" font-size="18" fill="#5d6b60">登录 T3MT 用户中心</text>
+    </g>
+    <path d="M302 140h32m-10-10 10 10-10 10" fill="none" stroke="#718472" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <g transform="translate(348 48)">
+      <rect width="246" height="184" rx="22" fill="#fff" stroke="#cbd6c9"/>
+      <circle cx="36" cy="36" r="19" fill="#49634b"/><text x="36" y="43" text-anchor="middle" font-size="20" font-weight="700" fill="#fff">2</text>
+      <text x="24" y="88" font-size="24" font-weight="700" fill="#253329">复制两项信息</text>
+      <text x="24" y="124" font-size="18" fill="#5d6b60">完整 API 接口地址</text>
+      <text x="24" y="153" font-size="18" fill="#5d6b60">自己生成的 API Key</text>
+    </g>
+    <path d="M608 140h32m-10-10 10 10-10 10" fill="none" stroke="#718472" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <g transform="translate(654 48)">
+      <rect width="246" height="184" rx="22" fill="#fff" stroke="#cbd6c9"/>
+      <circle cx="36" cy="36" r="19" fill="#49634b"/><text x="36" y="43" text-anchor="middle" font-size="20" font-weight="700" fill="#fff">3</text>
+      <text x="24" y="88" font-size="24" font-weight="700" fill="#253329">添加并保存配置</text>
+      <text x="24" y="124" font-size="18" fill="#5d6b60">先点击“添加到列表”</text>
+      <text x="24" y="153" font-size="18" fill="#5d6b60">再点击“保存配置”</text>
+    </g>
+    <path d="M914 140h32m-10-10 10 10-10 10" fill="none" stroke="#718472" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <g transform="translate(960 48)">
+      <rect width="198" height="184" rx="22" fill="#49634b"/>
+      <circle cx="36" cy="36" r="19" fill="#fff"/><text x="36" y="43" text-anchor="middle" font-size="20" font-weight="700" fill="#49634b">4</text>
+      <text x="24" y="88" font-size="24" font-weight="700" fill="#fff">测试后使用</text>
+      <text x="24" y="124" font-size="18" fill="#e8efe8">验证接口返回成功</text>
+      <text x="24" y="153" font-size="18" fill="#e8efe8">官网下载与在线播放</text>
+    </g>
+  </g>
+</svg>
