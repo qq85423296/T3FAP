@@ -7,7 +7,7 @@ const REFRESH_INTERVAL = 5 * 60 * 1000;
 const MAX_JSON_LENGTH = 2_000_000;
 const SLUG_PATTERN = /^[a-z0-9][a-z0-9-]*$/;
 const ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9_-]*$/;
-const INTERNAL_LINK_PATTERN = /^\/guide(?:\/([a-z0-9][a-z0-9-]*))?(?:#([A-Za-z0-9][A-Za-z0-9_-]*))?$/;
+const INTERNAL_LINK_PATTERN = /^\/guide(?:\/([a-z0-9][a-z0-9-]*)?)?(?:#([A-Za-z0-9][A-Za-z0-9_-]*))?$/;
 const LEGACY_SLUGS = {
   "quick-start/6-step-flow": "getting-started",
   "platform/overview": "monitor",
@@ -424,7 +424,7 @@ async function loadHelp() {
       try {
         const payload = await fetchSource(source);
         const persisted = writeCache(payload);
-        applyPayload(payload, source.id);
+        applyPayload(payload, source.id, { preserveScroll: Boolean(state.payload) });
         elements.error.hidden = true;
         setStatus(
           `${source.label} · 文档更新于 ${formatUpdatedAt(payload.updated_at)}`,
@@ -498,6 +498,34 @@ function renderCallout(block, extraClass = "") {
   return wrapper;
 }
 
+async function writeClipboard(text) {
+  try {
+    if (!navigator.clipboard?.writeText) throw new Error("clipboard unavailable");
+    await navigator.clipboard.writeText(text);
+    return;
+  } catch {
+    // Plain-HTTP LAN deployments may not expose the async Clipboard API.
+  }
+  const active = document.activeElement;
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.readOnly = true;
+  textarea.setAttribute("aria-hidden", "true");
+  textarea.style.cssText = "position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none;";
+  document.body.append(textarea);
+  textarea.focus({ preventScroll: true });
+  textarea.select();
+  textarea.setSelectionRange(0, textarea.value.length);
+  let copied = false;
+  try {
+    copied = Boolean(document.execCommand && document.execCommand("copy"));
+  } finally {
+    textarea.remove();
+    if (active instanceof HTMLElement) active.focus({ preventScroll: true });
+  }
+  if (!copied) throw new Error("clipboard copy rejected");
+}
+
 function renderCode(block) {
   const figure = element("figure", `help-code${block.variant ? ` help-code--${block.variant}` : ""}`);
   const caption = element("figcaption");
@@ -507,8 +535,7 @@ function renderCode(block) {
   copy.addEventListener("click", async () => {
     copy.disabled = true;
     try {
-      if (!navigator.clipboard?.writeText) throw new Error("clipboard unavailable");
-      await navigator.clipboard.writeText(block.code);
+      await writeClipboard(block.code);
       copy.textContent = "已复制";
     } catch {
       copy.textContent = "复制失败，请手动选择";
@@ -759,7 +786,7 @@ function renderRoute({ preserveScroll = false, smooth = false } = {}) {
   let slug = requestedSlug();
   if (LEGACY_SLUGS[slug]) {
     slug = LEGACY_SLUGS[slug];
-    const url = docUrl(slug, decodeURIComponent(window.location.hash.replace(/^#/, "")));
+    const url = docUrl(slug, routeSectionId());
     window.history.replaceState({}, "", relativeUrl(url));
   }
   const doc = state.payload.items.find((item) => item.slug === slug);
@@ -828,12 +855,40 @@ function renderSearchResults() {
   elements.search.setAttribute("aria-expanded", "true");
 }
 
+const menuBackground = [
+  document.querySelector(".help-header"),
+  document.querySelector(".help-status"),
+  document.querySelector("#help-main"),
+  document.querySelector(".help-outline"),
+].filter(Boolean);
+
+function setMenuBackgroundInert(inert) {
+  menuBackground.forEach((region) => {
+    region.inert = inert;
+    if (inert) region.setAttribute("aria-hidden", "true");
+    else region.removeAttribute("aria-hidden");
+  });
+}
+
+function syncMenuAccessibility() {
+  const mobile = window.innerWidth < 1024;
+  const open = mobile && elements.sidebar.classList.contains("is-open");
+  elements.sidebar.inert = mobile && !open;
+  if (mobile && !open) elements.sidebar.setAttribute("aria-hidden", "true");
+  else elements.sidebar.removeAttribute("aria-hidden");
+  setMenuBackgroundInert(open);
+}
+
 function openMenu() {
+  if (window.innerWidth >= 1024) return;
   elements.sidebar.classList.add("is-open");
+  elements.sidebar.inert = false;
+  elements.sidebar.removeAttribute("aria-hidden");
   elements.menuButton.setAttribute("aria-expanded", "true");
   elements.backdrop.hidden = false;
   document.body.style.overflow = "hidden";
-  elements.menuClose.focus();
+  elements.menuClose.focus({ preventScroll: true });
+  syncMenuAccessibility();
 }
 
 function closeMenu() {
@@ -842,8 +897,35 @@ function closeMenu() {
   elements.menuButton.setAttribute("aria-expanded", "false");
   elements.backdrop.hidden = true;
   document.body.style.overflow = "";
-  if (wasOpen && window.innerWidth < 1024) elements.menuButton.focus();
+  setMenuBackgroundInert(false);
+  if (wasOpen && window.innerWidth < 1024) elements.menuButton.focus({ preventScroll: true });
+  syncMenuAccessibility();
 }
+
+function trapMenuFocus(event) {
+  if (event.key !== "Tab" || window.innerWidth >= 1024 || !elements.sidebar.classList.contains("is-open")) return;
+  const focusable = [...elements.sidebar.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])')]
+    .filter((node) => node.getClientRects().length > 0);
+  if (!focusable.length) {
+    event.preventDefault();
+    return;
+  }
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  const active = document.activeElement;
+  if (!elements.sidebar.contains(active)) {
+    event.preventDefault();
+    (event.shiftKey ? last : first).focus();
+  } else if (event.shiftKey && active === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && active === last) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
+syncMenuAccessibility();
 
 document.addEventListener("click", (event) => {
   const anchor = event.target.closest("a[data-help-doc]");
@@ -865,6 +947,7 @@ elements.retry.addEventListener("click", loadHelp);
 elements.errorRetry.addEventListener("click", loadHelp);
 
 document.addEventListener("keydown", (event) => {
+  trapMenuFocus(event);
   if (event.key !== "Escape") return;
   closeSearch();
   closeMenu();
@@ -873,9 +956,7 @@ document.addEventListener("keydown", (event) => {
 
 window.addEventListener("popstate", () => renderRoute());
 window.addEventListener("hashchange", () => scrollToRouteTarget(true));
-window.addEventListener("resize", () => {
-  if (window.innerWidth >= 1024) closeMenu();
-});
+window.addEventListener("resize", closeMenu);
 window.addEventListener("online", () => { void loadHelp(); });
 window.setInterval(() => {
   if (document.visibilityState === "visible" && navigator.onLine) void loadHelp();

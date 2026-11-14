@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="zh-CN" data-type="software" data-radius="soft" data-ground="sage" data-buttons="solid" data-hq="c">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="site-kind" content="software">
+  <meta name="page-type" content="software">
+  <meta name="theme-color" content="#eeecea">
+  <meta name="description" content="T3FAP 影视资源自动化平台：资源搜索、网盘转存、自动任务与 STRM 输出。查看部署方法和新手操作教程。">
+  <title>T3FAP · 影视资源自动化平台</title>
+  <link rel="canonical" href="https://qq85423296.github.io/T3FAP/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/system.css">
+  <link rel="stylesheet" href="./assets/ui/cards.css">
+  <link rel="stylesheet" href="./assets/backgrounds/backgrounds.css">
+  <link rel="stylesheet" href="./assets/motion/motion.css">
+  <link rel="stylesheet" href="./assets/layout/layout.css">
+  <link rel="stylesheet" href="./assets/site.css">
+  <script src="./assets/backgrounds/backgrounds.js"></script>
+</head>
+<body id="top">
+  <header class="nav">
+    <div class="wrap nav__bar">
+      <a class="nav__logo" href="./" aria-label="T3FAP 首页"><span class="mark" data-mark="petal" aria-hidden="true"></span>T3FAP</a>
+      <nav class="nav__links" aria-label="主导航">
+        <div class="nav__item"><a class="nav__link" href="#features">功能</a></div>
+        <div class="nav__item"><a class="nav__link" href="#start">第一次使用</a></div>
+        <div class="nav__item"><a class="nav__link" href="./help/">帮助中心</a></div>
+        <div class="nav__item"><a class="nav__link" href="#faq">常见问题</a></div>
+      </nav>
+      <div class="nav__actions">
+        <a class="nav__link" href="https://github.com/qq85423296/T3FAP" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a class="btn btn--primary" href="./help/">在线帮助</a>
+      </div>
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-label="打开导航菜单"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 5h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero hero--split" aria-labelledby="hero-h">
+      <div class="wrap">
+        <div class="hero-text grid hero__grid">
+          <div class="hero__text hero__copy span-6">
+            <p class="hero__kicker">T3MT FILM AUTO PLATFORM</p>
+            <h1 id="hero-h">影视资源<br>自动化平台</h1>
+            <p class="hero__lead">把资源搜索、网盘转存、自动任务和 STRM 输出放在一个控制台里。第一次使用，也能按中文步骤完成。</p>
+            <div class="btn-row">
+              <a class="btn btn--primary" href="./help/?doc=getting-started">从第一次使用开始<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
+              <a class="btn btn--secondary" href="https://github.com/qq85423296/T3FAP" target="_blank" rel="noopener noreferrer">查看部署文件</a>
+            </div>
+            <div class="hero__facts" aria-label="部署信息">
+              <span>Docker 部署</span>
+              <span>默认端口 <b class="mono">8521</b></span>
+              <span>中文在线帮助</span>
+            </div>
+          </div>
+          <div class="hero__media span-6 start-7">
+            <div class="hero__effect" data-fx="fluted-glass" data-fx-palette="sage" aria-hidden="true"></div>
+            <div class="product-window" role="img" aria-label="T3FAP 控制台功能示意，包含资源搜索、我的网盘、任务中心和调度监控">
+              <div class="product-window__chrome">
+                <span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span>127.0.0.1:8521</span>
+              </div>
+              <div class="product-window__body">
+                <div class="product-window__sidebar" aria-hidden="true">
+                  <strong class="window-brand">T3FAP</strong>
+                  <div class="window-nav">
+                    <span class="is-current">平台总览</span><span>资源搜索</span><span>我的网盘</span><span>任务中心</span><span>调度监控</span><span>插件中心</span>
+                  </div>
+                </div>
+                <div class="product-window__main">
+                  <div class="window-heading"><strong>平台总览</strong><span class="window-status">控制台</span></div>
+                  <div class="window-cards">
+                    <div class="window-card"><small>找资源</small><strong>资源搜索</strong></div>
+                    <div class="window-card"><small>管理账号与目录</small><strong>我的网盘</strong></div>
+                    <div class="window-card"><small>手动或定时执行</small><strong>任务中心</strong></div>
+                    <div class="window-card"><small>检查运行与异常</small><strong>调度监控</strong></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features" aria-labelledby="features-h">
+      <div class="wrap">
+        <div class="grid section-head section-head--grid">
+          <div class="span-6"><p class="t-label">从发现到播放</p><h2 id="features-h">一个控制台，完成整条流程</h2></div>
+          <p class="t-lead span-6 start-7">每一步都有对应页面和操作入口。先手动成功一次，再让任务自动运行。</p>
+        </div>
+        <div class="grid feature-list" data-reveal>
+          <article class="span-3"><div class="feature-card">
+            <div class="feature-card__top"><span class="feature-card__index">01 / 资源</span></div>
+            <div class="feature-card__visual" data-visual><span>资源搜索</span><strong>搜索</strong><small>打开详情后选择转存</small></div>
+            <h3>发现与转存</h3><p>浏览资源或使用搜索视图，打开详情后选择可用的转存动作。</p><ul><li>资源浏览与关键词搜索</li><li>分享链接、提取码与目录</li><li>任务中心查看执行结果</li></ul>
+          </div></article>
+          <article class="span-3"><div class="feature-card">
+            <div class="feature-card__top"><span class="feature-card__index">02 / 网盘</span></div>
+            <div class="feature-card__visual" data-visual><span>网盘提供方</span><strong>开始扫码登录</strong><small>应用扫码结果后选择目录</small></div>
+            <h3>接入我的网盘</h3><p>按插件提供的方式添加账号，选择默认账号和目标目录。</p><ul><li>扫码或插件提供的登录方式</li><li>账号状态与目录管理</li><li>授权失败后的排查步骤</li></ul>
+          </div></article>
+          <article class="span-3"><div class="feature-card">
+            <div class="feature-card__top"><span class="feature-card__index">03 / 自动化</span></div>
+            <div class="feature-card__visual" data-visual><span>定时执行</span><strong>保存任务</strong><small>每天 · 每周 · 每月</small></div>
+            <h3>任务与订阅</h3><p>创建任务实例，设置定时执行，并通过日志确认每一步。</p><ul><li>创建、启用和停用任务</li><li>每天、每周或每月定时</li><li>执行记录与错误定位</li></ul>
+          </div></article>
+          <article class="span-3"><div class="feature-card">
+            <div class="feature-card__top"><span class="feature-card__index">04 / 输出</span></div>
+            <div class="feature-card__visual" data-visual><span>在线播放</span><strong>生成 STRM</strong><small>供媒体服务器或播放器使用</small></div>
+            <h3>STRM 与播放</h3><p>生成供媒体服务器或播放器使用的 STRM 文件，并检查播放条件。</p><ul><li>网盘与 TVBox 资源输出</li><li>Emby、Jellyfin 等播放环境</li><li>网络和授权问题排查</li></ul>
+          </div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section ground-surface" id="start" aria-labelledby="start-h">
+      <div class="wrap">
+        <div class="section-head start-heading">
+          <div class="start-heading__title"><div><p class="t-label">第一次使用</p><h2 id="start-h">按这五步做，不用先懂插件协议</h2></div></div>
+          <a class="btn btn--primary" href="./help/?doc=getting-started">从第一次使用开始</a>
+        </div>
+        <ol class="start-steps">
+          <li><div><div class="start-step__heading"><h3>启动 T3FAP</h3><a href="./help/?doc=install">安装与启动 →</a></div><p>准备 Docker，启动服务，用浏览器打开控制台。</p></div></li>
+          <li><div><div class="start-step__heading"><h3>登录并修改初始密码</h3><a href="./help/?doc=install#login-security">登录安全 →</a></div><p>在右上角用户菜单的“个人资料”中保存新密码。</p></div></li>
+          <li><div><div class="start-step__heading"><h3>接入一个网盘</h3><a href="./help/?doc=drive">网盘接入 →</a></div><p>完成授权，设置默认账号和目标目录。</p></div></li>
+          <li><div><div class="start-step__heading"><h3>搜索并手动转存一次</h3><a href="./help/?doc=resources">搜索与转存 →</a></div><p>先确认资源、账号、目录和任务执行都能正常完成。</p></div></li>
+          <li><div><div class="start-step__heading"><h3>再创建自动任务</h3><a href="./help/?doc=tasks">自动任务 →</a></div><p>设置定时，立即执行一次验证，然后查看日志。</p></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section" id="help" aria-labelledby="help-h">
+      <div class="wrap">
+        <div class="grid section-head section-head--grid">
+          <div class="span-6"><p class="t-label">在线帮助中心</p><h2 id="help-h">按你现在要做的事查</h2></div>
+          <p class="t-lead span-6 start-7">每篇只解决一类问题，写清楚点哪里、填什么、成功后能看到什么。</p>
+        </div>
+        <div class="grid help-grid" data-reveal>
+          <div class="span-4"><a class="help-topic" href="./help/?doc=install"><span class="help-topic__visual" data-visual><small>01</small><span>Docker 启动</span><strong>打开控制台</strong></span><h3>安装与启动</h3><p>Docker 启动、默认端口、首次登录与密码修改。</p><span class="help-topic__link">查看安装步骤 →</span></a></div>
+          <div class="span-4"><a class="help-topic" href="./help/?doc=drive"><span class="help-topic__visual" data-visual><small>02</small><span>网盘提供方</span><strong>开始扫码登录</strong></span><h3>接入我的网盘</h3><p>添加账号、完成授权、选择目录并检查账号状态。</p><span class="help-topic__link">查看网盘步骤 →</span></a></div>
+          <div class="span-4"><a class="help-topic" href="./help/?doc=resources"><span class="help-topic__visual" data-visual><small>03</small><span>资源搜索</span><strong>转存</strong></span><h3>搜索与转存资源</h3><p>从资源详情发起转存，再到任务中心检查结果。</p><span class="help-topic__link">查看转存步骤 →</span></a></div>
+          <div class="span-4"><a class="help-topic" href="./help/?doc=tasks"><span class="help-topic__visual" data-visual><small>04</small><span>定时执行</span><strong>保存任务</strong></span><h3>自动任务与订阅</h3><p>分清实例定时和模板默认定时，学会看执行日志。</p><span class="help-topic__link">查看任务步骤 →</span></a></div>
+          <div class="span-4"><a class="help-topic" href="./help/?doc=strm-playback"><span class="help-topic__visual" data-visual><small>05</small><span>在线播放</span><strong>生成 STRM</strong></span><h3>STRM 与播放</h3><p>理解 STRM 文件，排查网络、授权和播放器问题。</p><span class="help-topic__link">查看播放说明 →</span></a></div>
+          <div class="span-4"><a class="help-topic" href="./help/?doc=faq"><span class="help-topic__visual" data-visual><small>06</small><span>执行日志</span><strong>查看结果</strong></span><h3>常见问题</h3><p>打不开、无结果、任务不运行和播放失败的排查入口。</p><span class="help-topic__link">开始排查 →</span></a></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section ground-surface" id="faq" aria-labelledby="faq-h">
+      <div class="wrap grid">
+        <div class="span-6"><p class="t-label">常见问题</p><h2 id="faq-h">开始之前，先确认这几件事</h2><p><a class="link" href="./help/?doc=faq">查看全部常见问题 →</a></p></div>
+        <div class="span-6 start-7 faq">
+          <div class="faq__item"><h3>必须自己部署服务吗？</h3><p>T3FAP 控制台运行在你部署的 Docker 环境中。公开主页和帮助中心只提供项目说明与文档，不代替你的用户后端。</p></div>
+          <div class="faq__item"><h3>安装后在哪里打开？</h3><p>默认本机地址是 <span class="mono">http://127.0.0.1:8521</span>。从其他设备访问时，需要使用实际的局域网 IP 或域名，并正确配置公开访问地址。</p></div>
+          <div class="faq__item"><h3>T3FAP 的 STRM 文件就是视频吗？</h3><p>不是。STRM 保存的是播放地址，播放仍依赖网络、网盘原文件、账号授权和播放器支持。</p></div>
+          <div class="faq__item"><h3>T3FAP 里的教程会更新吗？</h3><p>教程文档页直接读取这里的在线帮助中心。更新公开文档后，重新打开教程页即可读取最新内容。</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer closing ground-inverse">
+    <div class="wrap">
+      <div class="closing__cta close--word">
+      <div class="section-head--split">
+        <div><p class="t-label">准备好了吗</p><h2 id="close-h">先完成第一次转存</h2><p class="t-lead">从安装启动开始，每一步都有中文说明。</p></div>
+        <a class="btn btn--primary" href="./help/?doc=getting-started">从第一次使用开始<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
+      </div>
+      <p class="close__word" aria-hidden="true">T3FAP</p>
+      </div>
+      <div class="closing__links">
+        <div class="grid">
+        <div class="span-4 stack-4"><a class="nav__logo" href="./"><span class="mark" data-mark="petal" aria-hidden="true"></span>T3FAP</a><p class="footer__lede">影视资源自动化平台的公开项目主页与在线帮助。</p></div>
+        <div class="span-2 start-7 footer__col"><h4>开始使用</h4><ul><li><a href="./help/?doc=install">安装与启动</a></li><li><a href="./help/?doc=getting-started">第一次使用</a></li><li><a href="./help/?doc=faq">常见问题</a></li></ul></div>
+        <div class="span-2 footer__col"><h4>公开内容</h4><ul><li><a href="./changelog.json">更新日志</a></li><li><a href="./announcements/index.json">公告</a></li><li><a href="./help/">帮助中心</a></li></ul></div>
+        <div class="span-2 footer__col"><h4>项目</h4><ul><li><a href="https://github.com/qq85423296/T3FAP" target="_blank" rel="noopener noreferrer">GitHub 仓库</a></li><li><a href="https://github.com/qq85423296/T3FAP/tree/main/plugins" target="_blank" rel="noopener noreferrer">官方插件库</a></li></ul></div>
+      </div>
+        <div class="footer__legal"><span>© 2026 T3FAP</span><a href="https://github.com/qq85423296/T3FAP" target="_blank" rel="noopener noreferrer">qq85423296 / T3FAP</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="./assets/site.js"></script>
+  <script type="module" src="./assets/system.js"></script>
+  <script type="module" src="./assets/motion/motion.js"></script>
+  <script type="module" src="./assets/layout/layout.js"></script>
+</body>
+</html>

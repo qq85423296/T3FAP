@@ -4,17 +4,22 @@
 
 ## 发布地址
 
-GitHub Pages 发布后，用户端优先读取：
+GitHub Pages 发布后，公开入口为：
 
+- 项目首页：`https://qq85423296.github.io/T3FAP/`
+- 在线帮助中心：`https://qq85423296.github.io/T3FAP/help/`
+- 帮助内容快照：`https://qq85423296.github.io/T3FAP/help/index.json`
 - 更新日志：`https://qq85423296.github.io/T3FAP/changelog.json`
 - 公告清单：`https://qq85423296.github.io/T3FAP/announcements/index.json`
 - 公告正文：`https://qq85423296.github.io/T3FAP/announcements/<文件名>`
 
-Pages 不可用或尚未开启时，用户端自动回退到：
+Pages 不可用或尚未开启时，用户端公开内容服务自动回退到：
 
 - `https://raw.githubusercontent.com/qq85423296/T3FAP/main/content/`
 
-用户端每 5 分钟、重新联网时以及打开对应页面时检查更新。成功读取后写入浏览器本地存储；远程读取失败时展示最近一次缓存。公告的已读、同意和不再提示记录仍只保存在用户本机。
+在线帮助页自身也按 GitHub Pages → GitHub Raw → 本机缓存的顺序读取同一份 `help/index.json`，不会混合不同来源的文章版本。T3FAP 用户端的 `/guide` 页面直接内嵌在线帮助中心；旧 `/guide/<文章>` 地址会转换为帮助中心的 `?doc=<slug>` 参数。首次打开或没有可用缓存时，设备需要能够访问公开内容源。
+
+用户端每 5 分钟、重新联网时以及打开对应公开内容页面时检查更新。成功读取后写入浏览器本地存储；远程读取失败时展示最近一次缓存。公告的已读、同意和不再提示记录仍只保存在用户本机。
 
 同一轮公告同步固定使用同一来源；如果清单或任一公告读取失败，会整体切换下一来源，避免混合 Pages 与 Raw 的不同版本。浏览器禁止本地存储或空间不足时仍展示新内容，但会明确提示本次未能保存。
 
@@ -27,6 +32,17 @@ Pages 不可用或尚未开启时，用户端自动回退到：
 5. 工作流成功后，访问 `https://qq85423296.github.io/T3FAP/changelog.json` 验证发布结果。
 
 GitHub 官方说明：<https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site>
+
+## 在线首页与帮助中心维护规则
+
+- `index.html` 是公开项目首页；`assets/` 只包含首页和帮助页实际使用的静态资源。
+- `help/index.html`、`help/help.css` 和 `help/app.js` 是帮助中心的页面、样式与渲染器。
+- 日常修改教程只编辑 `help/index.json`，不要在 JSON 中插入 HTML、脚本或 iframe。
+- 每篇文档使用稳定的 `id` 和 `slug`；空 `slug` 是帮助首页，全库必须且只能有一个。修改正文后同步更新根节点 `updated_at`。
+- 文档链接使用 `/guide/<slug>`，可由帮助中心转换为 `?doc=<slug>`；章节链接追加 `#<section-id>`。外部链接只允许不含账号信息的完整 HTTPS 地址。
+- 支持的内容块为：说明、列表、提示、代码、卡片、步骤、常见问题、参数表和键值信息。发布校验会拒绝未知块、重复 ID、危险链接和错误字段类型。
+- 在线页面以文本节点渲染 JSON，不执行其中的 HTML；外部链接自动使用 `noopener,noreferrer`。
+- 更新页面或文档后运行下方校验和单元测试，再通过现有 GitHub Actions 工作流发布。
 
 ## 更新日志维护规则
 
@@ -117,6 +133,7 @@ GitHub 官方说明：<https://docs.github.com/en/pages/getting-started-with-git
 
 ```bash
 python tools/validate_public_content.py
+python -m unittest discover -s tools -p "test_validate_public_content.py" -v
 ```
 
-校验内容包括 JSON 语法、必填字段、唯一 ID、清单文件名、时间格式、布尔字段以及 HTTPS 操作链接。GitHub Actions 发布前也会执行同一校验，校验失败不会部署。
+校验内容包括首页与帮助文档结构、JSON 语法、必填字段、唯一 ID、清单文件名、时间格式、布尔字段以及安全链接。GitHub Actions 发布前也会执行同一校验，校验失败不会部署。

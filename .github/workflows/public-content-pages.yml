@@ -29,6 +29,9 @@ jobs:
       - name: Validate public content
         run: python tools/validate_public_content.py
 
+      - name: Test public content validation
+        run: python -m unittest discover -s tools -p "test_validate_public_content.py" -v
+
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v5
         with:
