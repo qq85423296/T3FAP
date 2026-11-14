@@ -1,0 +1,1272 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-11-15T03:37:08+08:00",
+  "items": [
+    {
+      "id": "guide-home",
+      "slug": "",
+      "navTitle": "帮助首页",
+      "title": "T3FAP 新手帮助中心",
+      "subtitle": "从启动服务到完成第一次转存，每一步都告诉你点哪里。",
+      "description": "面向第一次使用 T3FAP 的用户。",
+      "group": "帮助中心",
+      "icon": "book",
+      "searchTags": ["新手", "教程", "帮助", "入门"],
+      "sections": [
+        {
+          "id": "welcome",
+          "title": "先从这里开始",
+          "description": "不需要先看开发文档，也不需要理解插件协议。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "hero",
+              "title": "第一次用，就按顺序做",
+              "subtitle": "先启动服务，再接入网盘，然后搜索并转存一部资源。完成这一次，后面的自动任务就容易理解了。",
+              "badges": ["中文操作步骤", "在线更新", "应用内直接阅读"],
+              "actions": [
+                { "label": "开始第一次使用", "to": "/guide/getting-started", "variant": "primary" },
+                { "label": "查看安装步骤", "to": "/guide/install", "variant": "secondary" }
+              ]
+            },
+            {
+              "type": "callout",
+              "tone": "info",
+              "title": "已经打开 T3FAP 控制台了吗",
+              "text": "可以直接从“第一次使用”开始。还没有打开控制台，请先看“安装与启动”。"
+            }
+          ]
+        },
+        {
+          "id": "start-topics",
+          "title": "先完成这三件事",
+          "description": "按顺序阅读，遇到问题时再查对应专题。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "card-grid",
+              "columns": 3,
+              "items": [
+                {
+                  "title": "1. 启动 T3FAP",
+                  "description": "准备 Docker，启动服务，并确认浏览器能打开控制台。",
+                  "icon": "settings",
+                  "to": "/guide/install",
+                  "actionLabel": "查看安装步骤",
+                  "notes": ["默认端口 8521", "启动失败也有排查方法"]
+                },
+                {
+                  "title": "2. 接入一个网盘",
+                  "description": "在“我的网盘”添加账号，并把它设为默认账号。",
+                  "icon": "drive",
+                  "to": "/guide/drive",
+                  "actionLabel": "查看网盘接入",
+                  "notes": ["支持扫码或插件提供的登录方式", "不要把 Cookie 发给陌生人"]
+                },
+                {
+                  "title": "3. 完成一次转存",
+                  "description": "搜索资源，打开详情，选择转存动作，再到任务中心看结果。",
+                  "icon": "resource",
+                  "to": "/guide/getting-started",
+                  "actionLabel": "跟着做一遍",
+                  "notes": ["先手动成功一次", "再考虑定时和订阅"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "feature-topics",
+          "title": "按你要做的事查文档",
+          "description": "每篇只解决一类问题，可以从左侧目录随时切换。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "card-grid",
+              "columns": 3,
+              "items": [
+                {
+                  "title": "找影视和网盘资源",
+                  "description": "了解资源视图、搜索视图、资源详情和转存入口。",
+                  "icon": "resource",
+                  "to": "/guide/resources",
+                  "actionLabel": "查看搜索与转存"
+                },
+                {
+                  "title": "让任务自动运行",
+                  "description": "创建任务、设置定时、手动试跑并查看执行日志。",
+                  "icon": "task",
+                  "to": "/guide/tasks",
+                  "actionLabel": "查看自动任务"
+                },
+                {
+                  "title": "生成 STRM 并播放",
+                  "description": "明白 STRM 是什么、文件在哪里，以及播放失败怎么查。",
+                  "icon": "monitor",
+                  "to": "/guide/strm-playback",
+                  "actionLabel": "查看 STRM 文档"
+                },
+                {
+                  "title": "安装和配置插件",
+                  "description": "从官方插件库安装能力，检查运行状态和健康情况。",
+                  "icon": "plugin",
+                  "to": "/guide/plugins",
+                  "actionLabel": "查看插件中心"
+                },
+                {
+                  "title": "检查运行状态",
+                  "description": "看懂平台总览、调度监控、任务状态和错误信息。",
+                  "icon": "dashboard",
+                  "to": "/guide/monitor",
+                  "actionLabel": "查看运行监控"
+                },
+                {
+                  "title": "解决常见问题",
+                  "description": "打不开页面、搜索为空、转存失败、任务不运行时可在这里逐项排查。",
+                  "icon": "help",
+                  "to": "/guide/faq",
+                  "actionLabel": "打开问题排查"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "getting-started",
+      "slug": "getting-started",
+      "navTitle": "第一次使用",
+      "title": "第一次使用：先完成一次转存",
+      "subtitle": "不要先研究所有设置。先用一部资源走通完整流程。",
+      "description": "适合已经能打开 T3FAP 控制台的新用户。",
+      "group": "开始使用",
+      "icon": "book",
+      "searchTags": ["第一次", "快速上手", "转存", "新手流程"],
+      "sections": [
+        {
+          "id": "prepare",
+          "title": "开始前准备",
+          "description": "准备齐这三项，操作会顺利很多。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "bullet-list",
+              "items": [
+                "已经能打开 T3FAP，并能登录控制台。",
+                "有一个可以正常使用的网盘账号。",
+                "知道想查找的影视名称。先选一个名称短、容易搜索的资源练习。"
+              ]
+            },
+            {
+              "type": "callout",
+              "tone": "warning",
+              "title": "不要一开始就连很多账号",
+              "text": "先接入一个网盘、完成一次转存。确认流程正确后，再添加更多账号和自动任务。"
+            }
+          ]
+        },
+        {
+          "id": "first-transfer",
+          "title": "六步完成第一次转存",
+          "description": "菜单名称以控制台左侧导航为准。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "step-list",
+              "items": [
+                {
+                  "title": "打开控制台",
+                  "description": "在浏览器访问你的 T3FAP 地址并登录。",
+                  "details": ["本机默认地址是 http://127.0.0.1:8521。", "看不到页面时，先阅读“安装与启动”。"]
+                },
+                {
+                  "title": "确认所需插件已启动",
+                  "description": "进入“插件中心”，检查资源搜索和网盘相关插件。",
+                  "details": ["先切换到“已安装”，再查看插件状态。", "需要的能力未安装时，可在“未安装”或“安装插件”中查找。"]
+                },
+                {
+                  "title": "添加网盘账号",
+                  "description": "进入“我的网盘”，点击“添加账号”。",
+                  "details": ["选择网盘提供方，按页面提供的扫码或登录方式完成授权。", "创建成功后选择该账号，并点击“设为默认账号”。"]
+                },
+                {
+                  "title": "搜索一部资源",
+                  "description": "进入“资源搜索”，输入影视名称并点击“搜索”。",
+                  "details": ["“资源视图”适合按来源浏览，“搜索视图”适合直接输入名称。", "结果为空时换一个来源，或缩短关键词后重试。"]
+                },
+                {
+                  "title": "从详情发起转存",
+                  "description": "点击资源卡片或“详情”，查看资源链接和“可执行动作”。",
+                  "details": ["有网盘链接时，选择页面显示的转存类动作。不同插件提供的按钮名称可能不同。", "按提示选择保存位置并确认。没有转存按钮时，先检查网盘账号和任务插件。"]
+                },
+                {
+                  "title": "到任务中心确认结果",
+                  "description": "进入“任务中心”，找到刚创建或刚执行的任务。",
+                  "details": ["点击“查看详情”查看状态和执行记录。", "也可以点击“立即执行”手动试跑。成功后再到网盘目标目录确认文件。"],
+                  "tip": {
+                    "tone": "success",
+                    "title": "看到文件才算真正完成",
+                    "text": "页面提示已提交，只说明任务已开始。最后请同时确认任务执行成功、网盘目录里能看到文件。"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "three-concepts",
+          "title": "三个常用词",
+          "description": "先理解用途，不需要记技术定义。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "card-grid",
+              "columns": 3,
+              "items": [
+                {
+                  "title": "转存",
+                  "description": "把别人分享给你的网盘文件保存到自己的网盘目录。",
+                  "notes": ["文件仍在网盘", "需要可用的分享链接和网盘账号"]
+                },
+                {
+                  "title": "STRM",
+                  "description": "一个体积很小的文本文件，用来告诉播放器去哪里读取影片。",
+                  "notes": ["不是视频文件", "播放时仍需要网盘和 T3FAP 正常可用"]
+                },
+                {
+                  "title": "自动任务",
+                  "description": "保存一组操作规则，让平台以后手动或定时重复执行。",
+                  "notes": ["先手动试跑", "确认成功后再开启定时"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "next-step",
+          "title": "第一次成功后做什么",
+          "description": "根据你的目标继续，不必一次配置全部功能。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "bullet-list",
+              "items": [
+                "只想保存网盘文件：继续阅读“搜索与转存资源”。",
+                "想自动追更：继续阅读“自动任务与订阅”。",
+                "想交给 Emby、Jellyfin 等播放器整理：继续阅读“STRM 与播放”。",
+                "出现红色错误或任务一直失败：先复制错误文本，再查“常见问题”。"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "install",
+      "slug": "install",
+      "navTitle": "安装与启动",
+      "title": "安装与启动",
+      "subtitle": "推荐使用 Docker Compose，并保留数据目录。",
+      "description": "适用于新安装、启动检查和日常升级。",
+      "group": "开始使用",
+      "icon": "settings",
+      "searchTags": ["Docker", "安装", "启动", "8521", "升级", "备份"],
+      "sections": [
+        {
+          "id": "prepare-install",
+          "title": "准备部署文件",
+          "description": "先安装 Docker 和 Docker Compose，再获取 T3FAP 公开仓库中的部署文件。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "step-list",
+              "items": [
+                {
+                  "title": "安装 Docker 环境",
+                  "description": "Windows 和 macOS 可使用 Docker Desktop；Linux 可安装 Docker Engine 与 Compose 插件。",
+                  "details": ["安装后先启动 Docker。", "在终端执行 docker compose version，能看到版本号再继续。"]
+                },
+                {
+                  "title": "准备 T3FAP 文件",
+                  "description": "下载公开仓库，至少保留 compose.yaml 和 .env.example。",
+                  "details": ["公开仓库：https://github.com/qq85423296/T3FAP", "以下命令应在这些文件所在目录执行。"]
+                },
+                {
+                  "title": "创建数据目录",
+                  "description": "这些目录用于保存数据库、应用数据和下载输出。",
+                  "details": ["Windows PowerShell 可分别执行：New-Item -ItemType Directory mysql-data,data,downloads。", "Linux 或 macOS 可执行下方命令。"]
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "shell",
+              "title": "Linux 或 macOS 创建目录",
+              "code": "mkdir -p mysql-data data downloads",
+              "defaultWrapped": true
+            }
+          ]
+        },
+        {
+          "id": "environment",
+          "title": "填写访问地址和数据库密码",
+          "description": "先复制环境变量示例，再修改 .env。不要把真实密码提交到公开仓库。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "code",
+              "language": "shell",
+              "title": "复制环境变量文件",
+              "code": "# Linux 或 macOS\ncp .env.example .env\n\n# Windows PowerShell\nCopy-Item .env.example .env",
+              "defaultWrapped": true
+            },
+            {
+              "type": "bullet-list",
+              "items": [
+                "T3MT_PUBLIC_BASE_URL：填写浏览器、Emby 或其他设备实际访问 T3FAP 的地址。",
+                "MYSQL_PASSWORD：设置一个新的数据库用户密码。",
+                "MYSQL_ROOT_PASSWORD：设置一个新的数据库管理员密码，不要与用户密码相同。"
+              ]
+            },
+            {
+              "type": "callout",
+              "tone": "warning",
+              "title": "局域网或播放器访问时不要保留 127.0.0.1",
+              "text": "127.0.0.1 只代表当前设备自己。其他电脑、电视或容器访问时，应填写 T3FAP 主机的局域网 IP 或域名，并保留实际端口。"
+            }
+          ]
+        },
+        {
+          "id": "start-service",
+          "title": "启动并检查",
+          "description": "首次启动需要拉取镜像并等待数据库就绪，请耐心等待。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "code",
+              "language": "shell",
+              "title": "启动服务",
+              "code": "docker compose up -d",
+              "defaultWrapped": true
+            },
+            {
+              "type": "step-list",
+              "items": [
+                {
+                  "title": "打开控制台",
+                  "description": "本机安装时访问 http://127.0.0.1:8521。",
+                  "details": ["能看到 T3FAP 页面，说明页面服务已经响应。"]
+                },
+                {
+                  "title": "检查健康接口",
+                  "description": "访问 http://127.0.0.1:8521/api/health。",
+                  "details": ["正常时应返回 JSON 健康检查结果。", "如果页面和健康接口都打不开，先检查容器状态与端口占用。"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "login-security",
+          "title": "首次登录与修改密码",
+          "description": "首次部署如果仍使用页面所示的初始账号，登录后请立即修改密码。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "step-list",
+              "items": [
+                {
+                  "title": "登录控制台",
+                  "description": "在登录页填写“账号”和“密码”，点击“登录系统”。",
+                  "details": ["“记住密码”和“自动登录”只适合你自己使用的安全设备。", "公共电脑或共享设备不要勾选这两个选项。"]
+                },
+                {
+                  "title": "打开个人资料",
+                  "description": "登录后打开右上角用户菜单，点击“个人资料”。",
+                  "details": ["密码修改不在“基础设置”中。"]
+                },
+                {
+                  "title": "保存新密码",
+                  "description": "填写“当前密码”“新密码”“确认新密码”，点击“保存新密码”。",
+                  "details": ["新密码至少 8 位，不要继续使用初始密码。", "保存后按页面提示重新登录，并确认新密码可用。"]
+                }
+              ]
+            },
+            {
+              "type": "callout",
+              "tone": "warning",
+              "title": "不要公开登录信息",
+              "text": "不要把控制台密码、API Keys 或登录截图发到公开仓库和公开群聊。需要他人协助时，只提供不含凭据的错误文本。"
+            }
+          ]
+        },
+        {
+          "id": "upgrade-backup",
+          "title": "升级和备份",
+          "description": "正常升级不需要删除数据目录。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "code",
+              "language": "shell",
+              "title": "拉取新镜像并重建容器",
+              "code": "docker compose pull\ndocker compose up -d",
+              "defaultWrapped": true
+            },
+            {
+              "type": "bullet-list",
+              "items": [
+                "大版本升级前，备份 mysql-data、data 和 downloads 三个目录。",
+                "升级后先检查网盘账号、插件和任务是否正常，再继续自动运行。",
+                "不要把 docker compose down -v 当作普通升级命令，-v 可能删除数据卷。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "install-faq",
+          "title": "启动常见问题",
+          "description": "先看最具体的一条错误，不要反复重装。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "faq-list",
+              "items": [
+                {
+                  "question": "浏览器提示无法访问 8521 端口",
+                  "answer": "先确认 Docker 已启动，再检查容器是否运行、8521 是否被其他程序占用。",
+                  "steps": ["在部署目录执行 docker compose ps。", "执行 docker compose logs --tail 100 查看末尾日志。", "确认访问地址与 .env 中的实际地址和端口一致。"]
+                },
+                {
+                  "question": "页面一直等待数据库",
+                  "answer": "首次启动可能需要等待 MySQL 初始化。持续失败时检查数据库密码、磁盘空间和 mysql-data 权限。",
+                  "steps": ["先等待几分钟再刷新。", "查看数据库容器日志中的第一条明确错误。", "不要在未备份时删除 mysql-data。"]
+                },
+                {
+                  "question": "其他设备打不开控制台",
+                  "answer": "检查 T3FAP 主机防火墙、局域网 IP 和 T3MT_PUBLIC_BASE_URL。",
+                  "steps": ["先在 T3FAP 主机本机确认页面可用。", "用主机的局域网 IP 加 8521 端口访问。", "修改 .env 后重新执行 docker compose up -d。"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "drive",
+      "slug": "drive",
+      "navTitle": "接入我的网盘",
+      "title": "接入我的网盘",
+      "subtitle": "添加一个账号，设为默认账号，再确认能浏览文件。",
+      "description": "说明账号授权、默认账号、目录浏览和登录失效处理。",
+      "group": "功能操作",
+      "icon": "drive",
+      "searchTags": ["网盘", "账号", "扫码", "Cookie", "Token", "默认账号", "目录"],
+      "sections": [
+        {
+          "id": "add-account",
+          "title": "添加第一个账号",
+          "description": "不同网盘提供的登录方式不同，以添加窗口实际显示的字段为准。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "step-list",
+              "items": [
+                {
+                  "title": "打开添加账号窗口",
+                  "description": "进入“我的网盘”，点击右上角“添加账号”。",
+                  "details": ["没有可添加的提供方时，先到“插件中心”检查网盘插件是否已安装并启动。"]
+                },
+                {
+                  "title": "选择网盘提供方",
+                  "description": "在“网盘提供方”中选择你要使用的网盘。",
+                  "details": ["阅读窗口顶部的账号说明，再选择登录方式。", "有扫码入口时，可点击“开始扫码登录”，使用对应网盘 App 确认。"]
+                },
+                {
+                  "title": "填写账号信息",
+                  "description": "按页面要求填写账号备注、授权信息、Token 或 Cookie。",
+                  "details": ["只填写当前登录方式要求的字段，不必把所有字段填满。", "需要长期使用时，优先选择插件明确推荐的授权方式。"]
+                },
+                {
+                  "title": "创建并浏览目录",
+                  "description": "点击“创建账号”，保存后选择新账号并查看目录。",
+                  "details": ["能看到网盘文件或文件夹，说明账号已基本可用。", "提示授权失败时，不要连续尝试旧二维码或旧授权码，应重新获取。"]
+                }
+              ]
+            },
+            {
+              "type": "callout",
+              "tone": "warning",
+              "title": "Cookie、Token 和密码都属于登录凭据",
+              "text": "不要截图发到公开群，不要写进公开帮助文档，也不要发给要求你提供凭据的陌生人。排查问题时只复制不含凭据的错误信息。"
+            }
+          ]
+        },
+        {
+          "id": "default-account",
+          "title": "设置默认账号和保存目录",
+          "description": "多个账号同时存在时，默认账号可减少每次转存的选择。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "step-list",
+              "items": [
+                {
+                  "title": "选择账号",
+                  "description": "在页面顶部“账号切换”下拉框中选择要使用的账号。",
+                  "details": ["先确认目录里显示的是这个账号的内容。"]
+                },
+                {
+                  "title": "设为默认账号",
+                  "description": "点击“设为默认账号”，等待页面提示设置成功。",
+                  "details": ["账号卡片会显示“默认账号”。", "需要更换时，选择另一个账号后重复操作。"]
+                },
+                {
+                  "title": "选择任务保存位置",
+                  "description": "创建转存或 STRM 任务时，在任务的目录选择入口中指定目标文件夹。",
+                  "details": ["不要只看当前浏览位置，提交任务前再确认一次目标目录。", "目录不存在时，可使用页面提供的“新建文件夹”功能。"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "browse-drive",
+          "title": "浏览和维护文件",
+          "description": "账号可用后，可以直接在“我的网盘”检查文件。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "bullet-list",
+              "items": [
+                "点击文件夹进入下一层，使用“返回当前目录”回到入口位置。",
+                "使用搜索框查找当前官方本地目录中的文件或文件夹。",
+                "点击“刷新”重新加载账号和目录，不变化时可稍后再试。",
+                "需要修改登录信息时使用“编辑账号”，不要直接删除正在执行任务的账号。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "drive-faq",
+          "title": "账号和目录问题",
+          "description": "授权失效与目录为空是两类问题，应分别处理。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "faq-list",
+              "items": [
+                {
+                  "question": "扫码成功但创建账号失败",
+                  "answer": "二维码结果可能已过期，或账号表单还有必填项未完成。",
+                  "steps": ["刷新二维码并重新扫码。", "确认已点击“应用扫码结果”或页面已自动填入登录信息。", "检查账号备注等必填项后再次创建。"]
+                },
+                {
+                  "question": "以前能用，现在提示登录失效",
+                  "answer": "网盘登录凭据可能过期，需要重新授权。",
+                  "steps": ["点击“编辑账号”，不要先删除账号。", "按原登录方式重新扫码或更新 Token、Cookie。", "保存后点击“刷新”，再检查目录。"]
+                },
+                {
+                  "question": "账号正常但看不到目标文件夹",
+                  "answer": "先确认当前账号和根目录，再检查网盘端是否确实已经保存。",
+                  "steps": ["核对“账号切换”中的账号。", "点击“刷新”重新读取目录。", "回到网盘官方 App 确认文件位置，再在任务中重新选择目录。"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "resources",
+      "slug": "resources",
+      "navTitle": "搜索与转存资源",
+      "title": "搜索与转存资源",
+      "subtitle": "先找到资源，再打开详情，最后选择可执行动作。",
+      "description": "说明资源视图、搜索视图、详情链接、转存和订阅入口。",
+      "group": "功能操作",
+      "icon": "resource",
+      "searchTags": ["资源搜索", "资源视图", "搜索视图", "分享链接", "转存", "订阅"],
+      "sections": [
+        {
+          "id": "search-resource",
+          "title": "找到一部资源",
+          "description": "“资源搜索”页面包含资源视图和搜索视图，两者用途不同。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "step-list",
+              "items": [
+                {
+                  "title": "选择浏览方式",
+                  "description": "进入“资源搜索”。按来源浏览时使用“资源视图”，直接找名称时点击“打开搜索视图”。",
+                  "details": ["资源视图的筛选项由资源插件提供。", "搜索视图适合输入明确的影视名称。"]
+                },
+                {
+                  "title": "输入关键词并选择来源",
+                  "description": "输入影视名称，选择搜索来源，然后点击“搜索”。",
+                  "details": ["第一次使用可先保留默认来源。", "结果太多时加上年份或更完整的名称；结果太少时缩短关键词。"]
+                },
+                {
+                  "title": "打开资源详情",
+                  "description": "点击海报、列表条目或“详情”。",
+                  "details": ["详情中会显示资源信息、官方链接、网盘链接和可执行动作。", "没有动作不代表搜索失败，通常是当前资源或插件没有提供对应能力。"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "transfer-resource",
+          "title": "转存到自己的网盘",
+          "description": "先确认资源详情里有网盘链接，再检查默认账号。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "step-list",
+              "items": [
+                {
+                  "title": "检查网盘链接",
+                  "description": "在详情的“资源链接”区域查看网盘链接和提取码。",
+                  "details": ["显示“暂无网盘链接”时，不能按网盘分享流程转存。", "可以点击“跳转”检查分享是否仍有效，注意保护提取码。"]
+                },
+                {
+                  "title": "选择转存类动作",
+                  "description": "在“可执行动作”中选择页面提供的转存或保存类按钮。",
+                  "details": ["按钮由当前资源和任务插件决定，名称可能不同。", "没有转存动作时，检查任务插件是否已启动，以及该资源是否有可用链接。"]
+                },
+                {
+                  "title": "确认账号和目录",
+                  "description": "在确认窗口中选择网盘账号、目标目录和需要的任务选项。",
+                  "details": ["提交前再次确认目标账号，避免保存到错误的网盘。", "需要长期自动处理时，可同时检查任务名称和定时设置。"]
+                },
+                {
+                  "title": "查看执行结果",
+                  "description": "提交后进入“任务中心”，查看任务详情和执行记录。",
+                  "details": ["“已创建”或“已提交”不等于已经转存成功。", "执行成功后，到“我的网盘”目标目录再次确认文件。"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "subscribe-resource",
+          "title": "创建订阅任务",
+          "description": "订阅适合持续更新的资源，不适合只保存一次的单集文件。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "bullet-list",
+              "items": [
+                "在资源详情的“可执行动作”中选择订阅类动作。",
+                "确认资源有可用网盘分享链接，并选择保存目录。",
+                "如果提示模板未配置订阅定时，先到“任务中心 > 模板配置”为对应模板设置定时。",
+                "创建后到“任务中心”确认任务已启用，并先手动执行一次。"
+              ]
+            },
+            {
+              "type": "callout",
+              "tone": "info",
+              "title": "相同资源可能已经有订阅",
+              "text": "页面提示“订阅任务已存在”时，不必重复创建。到任务中心搜索资源名称，检查原任务的目录、定时和启用状态。"
+            }
+          ]
+        },
+        {
+          "id": "resource-faq",
+          "title": "搜索和链接问题",
+          "description": "按“搜索无结果、详情无链接、链接已失效”分别排查。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "faq-list",
+              "items": [
+                {
+                  "question": "搜索一直没有结果",
+                  "answer": "可能是关键词、来源或插件状态问题。",
+                  "steps": ["缩短关键词后重新搜索。", "切换其他搜索来源。", "到“插件中心”确认搜索插件运行正常。", "查看页面错误文本；网络超时可稍后重试。"]
+                },
+                {
+                  "question": "详情里没有网盘链接",
+                  "answer": "当前来源可能只提供官方信息，或该资源没有可用分享。",
+                  "steps": ["换另一个搜索结果查看详情。", "尝试其他资源来源。", "不要填写来历不明的分享链接。"]
+                },
+                {
+                  "question": "提示分享链接已失效",
+                  "answer": "分享可能被发布者取消，或链接和提取码已经变化。",
+                  "steps": ["点击“跳转”在网盘官方页面确认。", "重新搜索同一资源的其他结果。", "不要反复执行已确认失效的旧任务，应更新链接后再试。"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tasks",
+      "slug": "tasks",
+      "navTitle": "自动任务与订阅",
+      "title": "自动任务与订阅",
+      "subtitle": "先创建任务并手动试跑，确认成功后再让它定时运行。",
+      "description": "说明任务创建、模板配置、启停、执行和日志。",
+      "group": "功能操作",
+      "icon": "task",
+      "searchTags": ["任务中心", "自动任务", "订阅", "定时", "立即执行", "任务日志"],
+      "sections": [
+        {
+          "id": "create-task",
+          "title": "创建一个任务",
+          "description": "任务模板决定能做什么，任务实例保存你的账号、目录和执行规则。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "step-list",
+              "items": [
+                {
+                  "title": "点击新建任务",
+                  "description": "进入“任务中心”，点击“新建任务”。",
+                  "details": ["列表为空时，也可以从空状态中的“新建任务”进入。"]
+                },
+                {
+                  "title": "选择任务模板",
+                  "description": "按你的目标选择转存、STRM、下载或其他已启用模板。",
+                  "details": ["看不到需要的模板时，先检查对应任务插件是否安装并启动。", "官网目录和直播目录等专用批量任务，应从资源中心的对应入口创建。"]
+                },
+                {
+                  "title": "填写任务内容",
+                  "description": "填写任务名称、来源、网盘账号、保存目录和页面要求的其他选项。",
+                  "details": ["带必填标记的字段必须完成。", "目录、过滤和命名选项先保持默认，试跑成功后再逐项调整。"]
+                },
+                {
+                  "title": "保存并立即执行",
+                  "description": "保存任务后，在列表中点击“立即执行”。",
+                  "details": ["执行窗口会显示后台运行状态和日志。", "不要连续重复点击；先看当前执行是否仍在运行。"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "schedule-task",
+          "title": "设置定时运行",
+          "description": "普通任务在任务编辑页设置时间；订阅模板的默认定时在“模板配置”中维护。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "step-list",
+              "items": [
+                {
+                  "title": "打开任务的定时设置",
+                  "description": "新建或编辑任务时，找到“定时执行”，点击“点击设置执行时间”。",
+                  "details": ["编辑已有任务时，可先在任务列表点击“编辑任务”。", "没有设置 cron 或定时规则时，任务只手动执行。"]
+                },
+                {
+                  "title": "选择并预览时间",
+                  "description": "选择“每天”“每周”或“每月”，再点击“预览近 3 次”检查。",
+                  "details": ["确认预览时间符合预期后点击“确认时间”。", "时间间隔不要过短，避免网盘或资源站触发访问限制。", "熟悉 cron 的用户才需要使用高级规则。"]
+                },
+                {
+                  "title": "保存并确认启用",
+                  "description": "点击“创建任务”或“保存任务”，回到列表确认状态为“启用中”。",
+                  "details": ["新建任务默认启用；停用状态下可点击“启用任务”。", "启用后仍建议先手动执行一次，不要等到下次定时才发现配置错误。"]
+                }
+              ]
+            },
+            {
+              "type": "callout",
+              "tone": "info",
+              "title": "资源页提示“模板未配置订阅定时”时",
+              "text": "这时才需要进入“任务中心 > 模板配置”，找到提示中的模板并设置订阅定时。不要把普通任务的实例定时和模板默认定时混为一处。"
+            }
+          ]
+        },
+        {
+          "id": "manage-task",
+          "title": "看懂任务操作按钮",
+          "description": "鼠标悬停在图标上可查看名称，窄屏下可打开任务详情。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "card-grid",
+              "columns": 2,
+              "items": [
+                {
+                  "title": "查看详情",
+                  "description": "查看任务配置、最近状态和执行记录。排查失败时先从这里开始。",
+                  "icon": "eye"
+                },
+                {
+                  "title": "立即执行",
+                  "description": "不等下次定时，马上在后台试跑一次。执行中不要重复提交。",
+                  "icon": "play"
+                },
+                {
+                  "title": "编辑任务",
+                  "description": "修改来源、目录和任务级选项。系统任务或专用批量任务可能不允许在此修改。",
+                  "icon": "pencil"
+                },
+                {
+                  "title": "停用或启用任务",
+                  "description": "停用会暂停后续调度，不会删除已有文件和历史记录。",
+                  "icon": "pause"
+                }
+              ]
+            },
+            {
+              "type": "callout",
+              "tone": "warning",
+              "title": "删除任务前先确认",
+              "text": "删除任务不等于清理网盘或本地输出文件。需要保留配置时，优先停用，不要直接删除。"
+            }
+          ]
+        },
+        {
+          "id": "task-faq",
+          "title": "任务没有按预期运行",
+          "description": "按任务状态、模板定时和最近日志的顺序检查。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "faq-list",
+              "items": [
+                {
+                  "question": "任务到了时间没有运行",
+                  "answer": "先检查实例是否启用，再检查任务自身的定时和平台调度状态。",
+                  "steps": ["确认任务显示“启用中”。", "打开“编辑任务”，检查“定时执行”和近 3 次预览。", "到“调度监控”查看调度是否暂停或有异常。", "点击“立即执行”确认任务本身是否可用。"]
+                },
+                {
+                  "question": "手动执行也失败",
+                  "answer": "先读执行窗口中最早出现的明确错误，不要只看最后的“执行失败”。",
+                  "steps": ["打开“查看详情”和执行记录。", "按错误检查分享链接、网盘授权、目标目录或插件状态。", "修改后再次手动执行，保留新的错误文本用于继续排查。"]
+                },
+                {
+                  "question": "任务成功但网盘没有新文件",
+                  "answer": "可能是目录选错、过滤条件排除了文件，或任务本身只生成 STRM 而不转存视频。",
+                  "steps": ["核对任务类型和目标目录。", "检查过滤规则和本次日志是否显示跳过。", "在“我的网盘”和本地输出目录分别确认实际产物。"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "strm-playback",
+      "slug": "strm-playback",
+      "navTitle": "STRM 与播放",
+      "title": "STRM 与播放",
+      "subtitle": "STRM 是播放入口，不是已经下载好的视频。",
+      "description": "说明 STRM 生成、输出目录、播放器访问和会员限制。",
+      "group": "功能操作",
+      "icon": "monitor",
+      "searchTags": ["STRM", "Emby", "Jellyfin", "播放", "原画代理", "转码"],
+      "sections": [
+        {
+          "id": "strm-meaning",
+          "title": "先理解 STRM",
+          "description": "STRM 文件通常很小，里面保存的是播放地址或读取入口。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "bullet-list",
+              "items": [
+                "生成 STRM 不等于把整部视频下载到本地。",
+                "播放器读取 STRM 时，仍需访问 T3FAP、网盘或相应播放服务。",
+                "删除网盘里的原文件、账号授权失效或访问地址错误，都可能导致 STRM 无法播放。",
+                "如果需要完全离线观看，应选择下载类任务，而不是只生成 STRM。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "create-strm",
+          "title": "生成 STRM",
+          "description": "可以处理单部资源，也可以用任务批量生成。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "step-list",
+              "items": [
+                {
+                  "title": "准备可用来源",
+                  "description": "先确认资源可以转存，或 TVBox 线路能够获取播放地址。",
+                  "details": ["网盘 STRM 通常依赖已接入的网盘账号和目标目录。", "TVBox 资源可在详情的“在线播放”区域使用“生成 STRM”。"]
+                },
+                {
+                  "title": "选择生成入口",
+                  "description": "单部资源可在详情动作中生成；批量整理可创建 STRM 任务或使用“创建批量STRM”。",
+                  "details": ["第一次使用建议先用单部资源验证。", "批量任务中的过滤和正则先保持简单，确认命名符合预期后再扩大范围。"]
+                },
+                {
+                  "title": "确认输出结果",
+                  "description": "执行完成后，在任务日志和本地输出目录检查 STRM 文件。",
+                  "details": ["默认部署将下载、STRM 和本地输出映射到 downloads 目录。", "实际相对目录和文件名由 STRM 插件及任务配置决定。"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "player-access",
+          "title": "让播放器访问 T3FAP",
+          "description": "Emby、Jellyfin 或其他播放器必须能访问 STRM 中使用的地址。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "step-list",
+              "items": [
+                {
+                  "title": "检查公开访问地址",
+                  "description": "确认 T3MT_PUBLIC_BASE_URL 是播放器实际能访问的地址。",
+                  "details": ["播放器不在 T3FAP 主机上时，通常不能使用 127.0.0.1。", "Docker 中的播放器也不能把宿主机的 127.0.0.1 当作宿主机地址。"]
+                },
+                {
+                  "title": "挂载输出目录",
+                  "description": "把 T3FAP 的 downloads 输出目录挂载或共享给播放器媒体库。",
+                  "details": ["播放器看到的媒体库路径可以不同，但文件内容必须保持一致。", "新增文件后按播放器方式刷新媒体库。"]
+                },
+                {
+                  "title": "试播一部影片",
+                  "description": "先测试一部已经确认网盘文件存在的影片。",
+                  "details": ["失败时同时查看播放器错误和 T3FAP 任务、网盘状态。", "只有一部失败时检查该文件；全部失败时优先检查访问地址和账号授权。"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "strm-faq",
+          "title": "播放常见问题",
+          "description": "会员、转码和原画是不同层面的限制。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "faq-list",
+              "items": [
+                {
+                  "question": "STRM 已生成，但播放器提示无法打开",
+                  "answer": "优先检查播放地址是否可达，再检查网盘文件和授权。",
+                  "steps": ["确认 STRM 文件存在且内容不是空文件。", "检查 T3MT_PUBLIC_BASE_URL 和播放器网络。", "在“我的网盘”确认原文件存在、账号授权有效。"]
+                },
+                {
+                  "question": "提示转码或直链需要网盘会员",
+                  "answer": "部分播放方式取决于网盘账号自身的平台会员，T3FAP 不能绕过该限制。",
+                  "steps": ["可改用页面提供的原画代理方式。", "或在网盘官方升级账号会员后重试。", "不要把会员限制误判为 STRM 文件损坏。"]
+                },
+                {
+                  "question": "媒体库没有显示新 STRM",
+                  "answer": "先检查文件是否进入播放器实际挂载的目录，再刷新媒体库。",
+                  "steps": ["核对 T3FAP 输出目录与播放器挂载目录。", "确认文件扩展名和目录扫描规则被播放器支持。", "手动刷新媒体库后再检查。"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "plugins",
+      "slug": "plugins",
+      "navTitle": "插件中心",
+      "title": "插件中心",
+      "subtitle": "插件提供搜索、网盘、任务、通知等能力，先安装，再启动和配置。",
+      "description": "面向使用者说明插件安装、状态、配置和升级。",
+      "group": "功能操作",
+      "icon": "plugin",
+      "searchTags": ["插件中心", "安装插件", "启用", "官方插件库", "AES", "请求超时"],
+      "sections": [
+        {
+          "id": "plugin-purpose",
+          "title": "先按功能找插件",
+          "description": "不需要理解插件开发规范，只看它提供什么功能。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "bullet-list",
+              "items": [
+                "资源类：提供影视目录、搜索或播放线路。",
+                "网盘类：提供账号授权、目录浏览和网盘操作能力。",
+                "任务类：提供转存、下载、STRM 等任务模板。",
+                "通知与自动化类：提供消息通知、机器人或其他扩展动作。"
+              ]
+            },
+            {
+              "type": "code",
+              "language": "text",
+              "title": "官方插件库地址",
+              "code": "https://github.com/qq85423296/T3FAP",
+              "defaultWrapped": true
+            }
+          ]
+        },
+        {
+          "id": "install-plugin",
+          "title": "安装和启动插件",
+          "description": "优先使用官方插件库，安装后还要检查运行状态。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "step-list",
+              "items": [
+                {
+                  "title": "查找插件",
+                  "description": "进入“插件中心”，按分类筛选，并切换“已安装”或“未安装”。",
+                  "details": ["远程列表不是最新时，点击“刷新远程列表”。", "也可以使用“安装插件”窗口提供的安装方式。"]
+                },
+                {
+                  "title": "安装并查看状态",
+                  "description": "选择需要的插件并安装，等待页面反馈。",
+                  "details": ["安装成功只代表文件已加入平台。", "继续检查插件卡片上的运行状态和健康状态。"]
+                },
+                {
+                  "title": "启动和配置",
+                  "description": "打开插件详情或“配置”，填写必填项并保存，再点击“启动”。",
+                  "details": ["不熟悉的选项先保留默认。", "保存后回到对应功能页验证，例如网盘插件应能在“我的网盘”选择提供方。"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "update-plugin",
+          "title": "更新和修改配置",
+          "description": "更新前先记下当前配置，更新后做一次实际功能检查。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "bullet-list",
+              "items": [
+                "在“已安装”视图中使用“获取新版本”检查可用更新。",
+                "更新后检查插件版本、运行状态和健康状态。",
+                "修改网盘、目录、解析或任务配置后，手动执行一个简单任务验证。",
+                "第三方插件只从可信来源安装，不要粘贴来路不明的凭据或配置。"
+              ]
+            },
+            {
+              "type": "callout",
+              "tone": "info",
+              "title": "官网解析新接口的两个默认值",
+              "text": "新增官网解析接口时，“内容加密（AES）”默认开启，“请求超时（秒）”默认为 60。已经保存的旧接口不会被这两个新默认值改写。"
+            }
+          ]
+        },
+        {
+          "id": "plugin-faq",
+          "title": "插件状态异常",
+          "description": "先处理最基础的安装、启动和配置问题。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "faq-list",
+              "items": [
+                {
+                  "question": "插件已安装，但功能页看不到入口",
+                  "answer": "插件可能尚未启动、配置不完整，或当前页面需要刷新。",
+                  "steps": ["检查插件卡片是否显示“运行中”。", "打开“配置”并补齐必填项。", "刷新功能页后重新检查。", "仍无入口时查看插件健康错误。"]
+                },
+                {
+                  "question": "远程插件列表加载失败",
+                  "answer": "可能是网络暂时无法访问 GitHub，先使用已有缓存或稍后重试。",
+                  "steps": ["不要反复安装同一个插件。", "检查 T3FAP 服务器的网络访问。", "稍后点击“刷新远程列表”，保留页面错误信息。"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "monitor",
+      "slug": "monitor",
+      "navTitle": "查看运行状态",
+      "title": "查看运行状态",
+      "subtitle": "先看平台是否健康，再看具体任务和插件。",
+      "description": "帮助新手看懂平台总览、调度监控和错误排查顺序。",
+      "group": "问题排查",
+      "icon": "dashboard",
+      "searchTags": ["平台总览", "调度监控", "健康", "执行日志", "异常", "状态"],
+      "sections": [
+        {
+          "id": "status-order",
+          "title": "按这个顺序排查",
+          "description": "不要一看到错误就修改所有配置。先缩小问题范围。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "step-list",
+              "items": [
+                {
+                  "title": "看平台总览",
+                  "description": "进入“平台总览”，检查服务、插件和任务是否出现明显异常。",
+                  "details": ["如果所有功能都异常，先检查服务和网络。", "只有一类功能异常时，继续检查对应插件或账号。"]
+                },
+                {
+                  "title": "看调度监控",
+                  "description": "进入“调度监控”，查看调度、执行和异常信号。",
+                  "details": ["定时任务不运行时，这里比资源搜索页更值得先检查。", "记录异常发生时间和相关任务名称。"]
+                },
+                {
+                  "title": "看具体任务日志",
+                  "description": "回到“任务中心”，打开失败任务的“查看详情”和执行记录。",
+                  "details": ["优先找第一条明确错误，而不是最后一条汇总失败。", "修改配置后手动执行一次，对比新的日志。"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "status-meaning",
+          "title": "几个容易混淆的状态",
+          "description": "状态描述的是不同阶段，不能混为一谈。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "card-grid",
+              "columns": 2,
+              "items": [
+                {
+                  "title": "任务已创建",
+                  "description": "配置已经保存，但可能还没有执行，更不代表文件已经生成。"
+                },
+                {
+                  "title": "任务执行中",
+                  "description": "后台正在处理。此时不要重复点击“立即执行”，先等待日志更新。"
+                },
+                {
+                  "title": "插件已安装",
+                  "description": "插件已经加入平台，但仍可能需要启动、授权或补充配置。"
+                },
+                {
+                  "title": "执行成功",
+                  "description": "本次任务已结束且未报告失败，仍建议检查网盘或输出目录的实际产物。"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "collect-error",
+          "title": "需要反馈问题时保留什么",
+          "description": "清楚的信息比一张只有“失败”二字的截图更有用。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "bullet-list",
+              "items": [
+                "你在哪个页面、点击了哪个按钮。",
+                "问题发生的大致时间，以及是否每次都能复现。",
+                "任务名称、插件名称和不含凭据的错误文本。",
+                "你已经尝试过哪些操作，尝试后错误是否变化。"
+              ]
+            },
+            {
+              "type": "callout",
+              "tone": "error",
+              "title": "公开反馈前删掉敏感信息",
+              "text": "不要发布 Cookie、Token、密码、接口密钥、完整网盘分享提取码或包含个人信息的账号截图。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faq",
+      "slug": "faq",
+      "navTitle": "常见问题",
+      "title": "常见问题与排查",
+      "subtitle": "先选择最符合你当前现象的问题，再按顺序检查。",
+      "description": "覆盖页面、搜索、网盘、任务、播放和在线帮助。",
+      "group": "问题排查",
+      "icon": "help",
+      "searchTags": ["常见问题", "失败", "打不开", "无结果", "不运行", "离线帮助"],
+      "sections": [
+        {
+          "id": "common-problems",
+          "title": "按现象查找",
+          "description": "每次只修改一项配置，然后重新测试，便于知道哪一步有效。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "faq-list",
+              "items": [
+                {
+                  "question": "T3FAP 页面打不开",
+                  "answer": "先确认服务运行，再确认地址、端口和防火墙。",
+                  "steps": ["在部署目录执行 docker compose ps。", "查看 docker compose logs --tail 100 的明确错误。", "本机尝试 http://127.0.0.1:8521。", "其他设备访问时检查局域网 IP、8521 端口和防火墙。"],
+                  "keywords": ["无法访问", "8521", "Docker"]
+                },
+                {
+                  "question": "能打开页面，但所有功能都失败",
+                  "answer": "检查后端健康接口、网络代理和平台总览，不要先重装插件。",
+                  "steps": ["访问 /api/health 查看健康结果。", "进入“平台总览”和“调度监控”检查异常。", "确认服务器能访问所需网盘和资源站点。"],
+                  "keywords": ["接口", "健康", "网络"]
+                },
+                {
+                  "question": "资源搜索为空",
+                  "answer": "换关键词和来源，再检查搜索插件。",
+                  "steps": ["缩短关键词并重新搜索。", "切换搜索来源或资源视图。", "到“插件中心”检查搜索插件状态。"],
+                  "keywords": ["搜索", "无结果", "关键词"]
+                },
+                {
+                  "question": "转存提示授权或登录失效",
+                  "answer": "到“我的网盘”重新授权对应账号。",
+                  "steps": ["选择正确账号并点击“编辑账号”。", "重新扫码或更新 Token、Cookie。", "保存后刷新目录，再手动执行任务。"],
+                  "keywords": ["授权", "Cookie", "Token", "登录失效"]
+                },
+                {
+                  "question": "转存成功但找不到文件",
+                  "answer": "先核对账号和目标目录，再看任务日志是否实际处理或跳过了文件。",
+                  "steps": ["检查“账号切换”是否为任务使用的账号。", "在任务详情确认目标目录。", "刷新网盘目录，并查看执行日志中的保存路径和跳过原因。"],
+                  "keywords": ["转存", "目录", "找不到文件"]
+                },
+                {
+                  "question": "订阅任务没有自动运行",
+                  "answer": "检查模板定时、任务启用状态和调度监控。",
+                  "steps": ["确认任务显示“启用中”。", "打开任务编辑页，检查“定时执行”；订阅任务还要在“模板配置”确认对应模板有订阅定时。", "到“调度监控”检查调度异常。", "点击“立即执行”验证任务配置。"],
+                  "keywords": ["订阅", "定时", "调度"]
+                },
+                {
+                  "question": "STRM 文件存在但不能播放",
+                  "answer": "STRM 不是视频本体，播放仍依赖网络、网盘文件和授权。",
+                  "steps": ["检查播放器能否访问 T3MT_PUBLIC_BASE_URL。", "确认网盘原文件存在且账号未失效。", "检查是否属于网盘会员或转码限制。", "用另一部已知正常的影片对比测试。"],
+                  "keywords": ["STRM", "播放器", "Emby", "Jellyfin"]
+                },
+                {
+                  "question": "帮助中心一直加载或提示读取失败",
+                  "answer": "T3FAP 的教程页会直接打开 GitHub 在线帮助中心，首次打开需要能够访问 GitHub Pages。",
+                  "steps": ["检查当前设备是否能访问 GitHub Pages。", "点击教程页右上角的“在新窗口打开”，确认浏览器能否访问。", "网络恢复后重新打开“教程文档”，或在帮助中心点击“重新读取”。"],
+                  "keywords": ["帮助", "加载", "读取失败", "网络", "GitHub"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "still-stuck",
+          "title": "仍然没有解决",
+          "description": "先保存证据，再回到最相关的专题继续排查。",
+          "level": 2,
+          "blocks": [
+            {
+              "type": "bullet-list",
+              "items": [
+                "安装和访问问题：查看“安装与启动”。",
+                "账号、授权和目录问题：查看“接入我的网盘”。",
+                "任务失败：打开任务详情，保留第一条明确错误，再查看“自动任务与订阅”。",
+                "需要公开反馈时，删除所有密码、Cookie、Token、接口密钥和个人账号信息。"
+              ]
+            },
+            {
+              "type": "callout",
+              "tone": "info",
+              "title": "在线帮助中心",
+              "text": "浏览器也可以直接访问 https://qq85423296.github.io/T3FAP/help/ 阅读相同文档。"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
