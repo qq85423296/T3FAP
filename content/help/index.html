@@ -1,16 +1,14 @@
 <!doctype html>
-<html lang="zh-CN" data-type="product" data-radius="soft" data-buttons="solid">
+<html lang="zh-CN" data-type="software" data-radius="soft" data-buttons="solid">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="page-type" content="software">
   <meta name="site-kind" content="software">
-  <meta name="theme-color" content="#eeecea">
+  <meta name="theme-color" content="#f6ebe4">
   <meta name="description" content="T3FAP 中文新手帮助中心：安装启动、网盘接入、资源转存、自动任务、STRM 播放和故障排查。">
   <title>T3FAP 在线帮助中心</title>
   <link rel="canonical" href="https://qq85423296.github.io/T3FAP/help/">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/system.css">
   <link rel="stylesheet" href="../assets/site.css">
   <link rel="stylesheet" href="./help.css">
@@ -19,36 +17,43 @@
   <a class="help-skip" href="#help-article">跳到正文</a>
   <header class="help-topbar">
     <div class="help-topbar__inner">
-      <button id="help-menu-button" class="help-icon-button help-menu-button" type="button" aria-label="打开文档目录" aria-expanded="false" aria-controls="help-sidebar">
-        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14"/></svg>
-      </button>
-      <a class="help-brand" href="../" aria-label="返回 T3FAP 首页"><span class="help-brand__mark" aria-hidden="true">T3</span><span>T3FAP <small>帮助中心</small></span></a>
+      <a class="help-brand" href="../" aria-label="返回 T3FAP 首页"><span class="help-brand__mark" aria-hidden="true">T3</span><span class="help-brand__text">T3FAP <small>帮助中心</small></span></a>
       <div class="help-search" role="search">
         <label class="help-sr-only" for="help-search-input">搜索帮助文档</label>
-        <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m13 13 4 4"/></svg>
-        <input id="help-search-input" type="search" placeholder="搜索：安装、转存、定时、STRM…" autocomplete="off" aria-expanded="false" aria-controls="help-search-results">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>
+        <input id="help-search-input" type="search" placeholder="搜索教程..." autocomplete="off" aria-expanded="false" aria-controls="help-search-results">
         <div id="help-search-results" class="help-search-results" hidden></div>
       </div>
+      <button id="help-search-toggle" class="help-icon-button help-search-toggle" type="button" aria-label="打开教程搜索" aria-expanded="false" aria-controls="help-search-input">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>
+      </button>
       <nav class="help-topbar__links" aria-label="帮助中心导航">
         <a href="../">项目首页</a>
-        <a href="https://github.com/qq85423296/T3FAP" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+        <a class="help-github-link" href="https://github.com/qq85423296/T3FAP" target="_blank" rel="noopener noreferrer">GitHub</a>
       </nav>
     </div>
   </header>
 
-  <div class="help-status" role="status" aria-live="polite">
-    <div>
-      <span id="help-source">正在读取在线教程…</span>
-      <span id="help-warning" class="help-status__warning" hidden></span>
-      <button id="help-retry" type="button" hidden>重新读取</button>
-    </div>
+  <div class="help-channelbar">
+    <nav id="help-channel-nav" class="help-channel-nav" aria-label="教程频道"></nav>
+    <button id="help-menu-button" class="help-channel-current" type="button" aria-label="打开文档目录" aria-expanded="false" aria-controls="help-sidebar">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <span id="help-channel-current">新手教程</span><span class="help-channel-current__suffix">正文</span>
+    </button>
   </div>
 
   <div class="help-shell">
     <aside id="help-sidebar" class="help-sidebar" aria-label="文档目录">
-      <div class="help-sidebar__top"><strong>新手教程</strong><button id="help-menu-close" class="help-icon-button" type="button" aria-label="关闭文档目录">×</button></div>
+      <div class="help-sidebar__top"><strong>T3FAP 教程</strong><button id="help-menu-close" class="help-icon-button" type="button" aria-label="关闭文档目录"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
       <nav id="help-nav" class="help-nav"></nav>
-      <div class="help-sidebar__footer"><span>遇到问题？</span><a id="help-faq-link" href="?doc=faq">先查常见问题 →</a></div>
+      <div class="help-sidebar__footer">
+        <div class="help-status" role="status" aria-live="polite">
+          <span id="help-source">正在读取在线教程…</span>
+          <span id="help-warning" class="help-status__warning" hidden></span>
+          <button id="help-retry" type="button" hidden>重新读取</button>
+        </div>
+        <span>遇到问题？</span><a id="help-faq-link" href="?doc=faq">先查常见问题</a>
+      </div>
     </aside>
     <button id="help-backdrop" class="help-backdrop" type="button" aria-label="关闭文档目录" hidden></button>
 
@@ -56,7 +61,6 @@
       <div id="help-loading" class="help-loading" role="status"><span class="help-loading__line"></span><span class="help-loading__line help-loading__line--short"></span><p>正在准备中文操作步骤…</p></div>
       <article id="help-article" class="help-article" tabindex="-1" hidden></article>
       <div id="help-error" class="help-error" hidden>
-        <p class="help-error__code">HELP / CONNECTION</p>
         <h1>暂时没有读到教程</h1>
         <p id="help-error-message">请检查网络后重新读取。</p>
         <div class="help-error__actions"><button id="help-error-retry" class="help-button help-button--primary" type="button">重新读取</button><a class="help-button" href="https://github.com/qq85423296/T3FAP" target="_blank" rel="noopener noreferrer">打开 GitHub 仓库</a></div>
@@ -65,7 +69,7 @@
     </main>
 
     <aside class="help-outline" aria-label="本页目录">
-      <div id="help-outline-content"><strong>本页内容</strong><p>读取文档后显示章节目录。</p></div>
+      <div id="help-outline-content"><strong>页内目录</strong><p>读取文档后显示章节目录。</p></div>
     </aside>
   </div>
 

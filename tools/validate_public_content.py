@@ -22,6 +22,8 @@ BOOLEAN_FIELDS = {
 }
 HELP_SLUG_PATTERN = re.compile(r"[a-z0-9][a-z0-9-]*")
 HELP_SECTION_ID_PATTERN = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]*")
+HELP_IMAGE_PATTERN = re.compile(r"assets/[A-Za-z0-9][A-Za-z0-9/_-]*\.(?:png|jpe?g|webp)")
+DEFAULT_HELP_ROOT = Path(__file__).resolve().parents[1] / "content" / "help"
 HELP_INTERNAL_LINK_PATTERN = re.compile(
     r"/guide(?:/[a-z0-9][a-z0-9-]*)?(?:#[A-Za-z0-9][A-Za-z0-9_-]*)?"
 )
@@ -257,7 +259,12 @@ def validate_help_param_rows(
             )
 
 
-def validate_help_block(value: Any, label: str, problems: list[str]) -> None:
+def validate_help_block(
+    value: Any,
+    label: str,
+    problems: list[str],
+    help_root: Path = DEFAULT_HELP_ROOT,
+) -> None:
     block = require_mapping(value, label, problems)
     if block is None:
         return
@@ -374,6 +381,25 @@ def validate_help_block(value: Any, label: str, problems: list[str]) -> None:
                     allow_empty=True,
                 )
                 validate_optional_text(item, "imageLabel", item_label, problems)
+                if "screenshot" in item:
+                    screenshot_label = f"{item_label} screenshot"
+                    screenshot = require_mapping(item["screenshot"], screenshot_label, problems)
+                    if screenshot is not None:
+                        src = require_text(screenshot, "src", screenshot_label, problems)
+                        require_text(screenshot, "alt", screenshot_label, problems)
+                        require_text(screenshot, "caption", screenshot_label, problems)
+                        if src and not HELP_IMAGE_PATTERN.fullmatch(src):
+                            problems.append(
+                                f"{screenshot_label}: src 仅允许 assets/ 下的 PNG、JPEG 或 WebP 图片"
+                            )
+                        elif src and not (help_root / src).is_file():
+                            problems.append(f"{screenshot_label}: 图片文件 {src!r} 不存在")
+                        for dimension in ("width", "height"):
+                            value = screenshot.get(dimension)
+                            if type(value) is not int or not 1 <= value <= 5000:
+                                problems.append(
+                                    f"{screenshot_label}: {dimension} 必须是 1 到 5000 的整数"
+                                )
                 if "tip" in item:
                     tip = require_mapping(item["tip"], f"{item_label} tip", problems)
                     if tip is not None:
@@ -407,6 +433,7 @@ def validate_help_section(
     label: str,
     section_ids: set[str],
     problems: list[str],
+    help_root: Path = DEFAULT_HELP_ROOT,
 ) -> None:
     section = require_mapping(value, label, problems)
     if section is None:
@@ -428,7 +455,7 @@ def validate_help_section(
     if len(blocks) > 60:
         problems.append(f"{label}: blocks 最多 60 项")
     for index, block in enumerate(blocks):
-        validate_help_block(block, f"{label} blocks[{index}]", problems)
+        validate_help_block(block, f"{label} blocks[{index}]", problems, help_root=help_root)
 
 
 def validate_help_document(document: dict[str, Any], path: Path, problems: list[str]) -> int:
@@ -485,6 +512,7 @@ def validate_help_document(document: dict[str, Any], path: Path, problems: list[
                     f"{label} sections[{section_index}]",
                     section_ids,
                     problems,
+                    help_root=path.parent,
                 )
 
     if home_count != 1:

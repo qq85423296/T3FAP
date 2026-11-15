@@ -44,6 +44,10 @@ const elements = {
   sidebar: document.querySelector("#help-sidebar"),
   backdrop: document.querySelector("#help-backdrop"),
   faqLink: document.querySelector("#help-faq-link"),
+  channelNav: document.querySelector("#help-channel-nav"),
+  channelCurrent: document.querySelector("#help-channel-current"),
+  searchContainer: document.querySelector(".help-search"),
+  searchToggle: document.querySelector("#help-search-toggle"),
 };
 
 const state = {
@@ -127,6 +131,26 @@ function normalizeTip(value, label) {
     tone: choice(item.tone, ["info", "success", "warning", "error"], `${label}.tone`),
     title: text(item.title, `${label}.title`, { max: 300 }),
     text: text(item.text, `${label}.text`),
+  };
+}
+
+function normalizeScreenshot(value, label) {
+  if (value === undefined) return undefined;
+  const item = object(value, label);
+  const src = text(item.src, `${label}.src`, { max: 500 });
+  if (!/^assets\/[a-z0-9][a-z0-9/_-]*\.(?:png|jpe?g|webp)$/i.test(src)) {
+    fail(`${label}.src`, "仅允许 assets/ 下的安全图片路径");
+  }
+  const width = item.width;
+  const height = item.height;
+  if (!Number.isInteger(width) || width < 1 || width > 5000) fail(`${label}.width`, "必须是 1–5000 的整数");
+  if (!Number.isInteger(height) || height < 1 || height > 5000) fail(`${label}.height`, "必须是 1–5000 的整数");
+  return {
+    src,
+    alt: text(item.alt, `${label}.alt`, { max: 400 }),
+    caption: text(item.caption, `${label}.caption`, { max: 600 }),
+    width,
+    height,
   };
 }
 
@@ -231,6 +255,7 @@ function normalizeBlock(value, label) {
           description: text(step.description, `${rowLabel}.description`),
           details: stringList(step.details, `${rowLabel}.details`, { empty: true, max: 20 }),
           imageLabel: text(step.imageLabel, `${rowLabel}.imageLabel`, { optional: true, max: 300 }),
+          screenshot: normalizeScreenshot(step.screenshot, `${rowLabel}.screenshot`),
           tip: normalizeTip(step.tip, `${rowLabel}.tip`),
         };
       }),
@@ -312,6 +337,34 @@ function element(tag, className, content) {
   if (className) node.className = className;
   if (content !== undefined) node.textContent = content;
   return node;
+}
+
+const ICON_PATHS = {
+  book: ["M4 5.5A2.5 2.5 0 0 1 6.5 3H11v16H6.5A2.5 2.5 0 0 0 4 21.5z", "M20 5.5A2.5 2.5 0 0 0 17.5 3H13v16h4.5a2.5 2.5 0 0 1 2.5 2.5z"],
+  settings: ["M4 7h10M18 7h2M4 17h2M10 17h10", "M14 4v6M6 14v6"],
+  drive: ["M4 8.5A3.5 3.5 0 0 1 7.5 5H10l2 2h4.5A3.5 3.5 0 0 1 20 10.5v5A3.5 3.5 0 0 1 16.5 19h-9A3.5 3.5 0 0 1 4 15.5z"],
+  resource: ["M10.5 4a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13z", "m15.5 15.5 4.5 4.5"],
+  task: ["M8 4h8M9 2h6v4H9z", "M6 4H4v18h16V4h-2", "m8 13 2.5 2.5L16 10"],
+  monitor: ["M3 4h18v12H3z", "M8 20h8M12 16v4"],
+  plugin: ["M9 3v4H5v5H2v5h3v4h5v-3h5v3h5v-5h3v-5h-3V7h-5V3z"],
+  dashboard: ["M3 3h7v7H3zM14 3h7v4h-7zM14 11h7v10h-7zM3 14h7v7H3z"],
+  help: ["M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z", "M9.5 9a2.5 2.5 0 1 1 4 2c-1 .7-1.5 1.2-1.5 2.5M12 17h.01"],
+  "arrow-right": ["M5 12h14M14 7l5 5-5 5"],
+  copy: ["M8 8h12v12H8z", "M16 8V4H4v12h4"],
+  link: ["M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1.2 1.2", "M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1.2-1.2"],
+};
+
+function createSvgIcon(name, className = "help-icon") {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("aria-hidden", "true");
+  svg.setAttribute("class", className);
+  (ICON_PATHS[name] || ICON_PATHS.book).forEach((data) => {
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", data);
+    svg.append(path);
+  });
+  return svg;
 }
 
 function docUrl(slug = "", sectionId = "") {
@@ -478,17 +531,25 @@ function renderNavigation() {
     return wrapper;
   });
   elements.nav.replaceChildren(homeLink, ...groupNodes);
+  const channels = state.payload.items.filter((doc) => doc.slug).map((doc) => {
+    const anchor = makeLink("", `/guide/${doc.slug}`, "help-channel-nav__link");
+    anchor.append(createSvgIcon(doc.icon), element("span", "", doc.navTitle));
+    return anchor;
+  });
+  elements.channelNav.replaceChildren(...channels);
   elements.faqLink.href = relativeUrl(docUrl("faq"));
   elements.faqLink.dataset.helpDoc = "true";
 }
 
 function updateActiveNavigation(slug) {
-  elements.nav.querySelectorAll("a[data-help-doc]").forEach((anchor) => {
+  [...elements.nav.querySelectorAll("a[data-help-doc]"), ...elements.channelNav.querySelectorAll("a[data-help-doc]")].forEach((anchor) => {
     const url = new URL(anchor.href);
     const active = (url.searchParams.get("doc") || "") === slug;
     if (active) anchor.setAttribute("aria-current", "page");
     else anchor.removeAttribute("aria-current");
   });
+  const activeDocument = state.payload?.items.find((doc) => doc.slug === slug);
+  elements.channelCurrent.textContent = activeDocument?.navTitle || (slug ? "文档不存在" : "新手教程");
 }
 
 function renderCallout(block, extraClass = "") {
@@ -599,13 +660,17 @@ function renderBlock(block) {
     const grid = element("div", `help-block help-card-grid help-card-grid--${block.columns || 2}`);
     block.items.forEach((card) => {
       const node = card.to ? makeLink("", card.to, "help-card") : element("article", "help-card");
-      node.append(element("h3", "", card.title), element("p", "", card.description));
+      node.append(createSvgIcon(card.icon || "book", "help-card__icon"), element("h3", "", card.title), element("p", "", card.description));
       if (card.notes?.length) {
         const notes = element("ul");
         card.notes.forEach((note) => notes.append(element("li", "", note)));
         node.append(notes);
       }
-      if (card.to) node.append(element("span", "help-card__action", `${card.actionLabel || "查看详情"} →`));
+      if (card.to) {
+        const action = element("span", "help-card__action", card.actionLabel || "查看详情");
+        action.append(createSvgIcon("arrow-right"));
+        node.append(action);
+      }
       grid.append(node);
     });
     return grid;
@@ -634,7 +699,34 @@ function renderBlock(block) {
         step.details.forEach((detail) => details.append(element("li", "", detail)));
         content.append(details);
       }
-      if (step.imageLabel) content.append(element("p", "help-step__image-label", `图示：${step.imageLabel}`));
+      if (step.screenshot) {
+        const shot = step.screenshot;
+        const figure = element("figure", "help-step__screenshot");
+        const preview = element("a", "help-step__screenshot-link");
+        preview.href = shot.src;
+        preview.target = "_blank";
+        preview.rel = "noopener noreferrer";
+        preview.title = "在新窗口查看原图";
+        preview.setAttribute("aria-label", `查看原图：${shot.alt}`);
+        const image = element("img");
+        image.alt = shot.alt;
+        image.width = shot.width;
+        image.height = shot.height;
+        image.loading = "lazy";
+        image.decoding = "async";
+        const fallback = element("p", "help-step__screenshot-error", "截图暂时无法加载，请按本步骤的文字说明操作。");
+        fallback.hidden = true;
+        fallback.setAttribute("role", "status");
+        image.addEventListener("error", () => {
+          preview.hidden = true;
+          fallback.hidden = false;
+        }, { once: true });
+        image.src = shot.src;
+        preview.append(image);
+        figure.append(preview, fallback, element("figcaption", "", shot.caption));
+        content.append(figure);
+      }
+      if (step.imageLabel && !step.screenshot) content.append(element("p", "help-step__image-label", `图示：${step.imageLabel}`));
       if (step.tip) content.append(renderCallout(step.tip, "help-step__tip"));
       item.append(element("span", "help-sr-only", "步骤"), content);
       listNode.append(item);
@@ -679,7 +771,7 @@ function renderBlock(block) {
 }
 
 function renderOutline(doc) {
-  const title = element("strong", "", "本页内容");
+  const title = element("strong", "", "页内目录");
   const nav = element("nav");
   doc.sections.forEach((section) => {
     const anchor = makeLink(section.title, `/guide/${doc.slug}#${section.id}`);
@@ -702,9 +794,25 @@ function renderOutline(doc) {
 
 function renderDocument(doc) {
   const article = elements.article;
-  const breadcrumb = element("p", "help-breadcrumb", `帮助中心 / ${doc.group} / ${doc.navTitle}`);
   const header = element("header", "help-doc-header");
-  header.append(element("p", "help-doc-header__group", doc.group), element("h1", "", doc.title), element("p", "help-doc-header__subtitle", doc.subtitle));
+  const titleRow = element("div", "help-doc-title-row");
+  const copyLink = element("button", "help-copy-link");
+  const copyLabel = element("span", "", "复制链接");
+  copyLink.type = "button";
+  copyLink.append(createSvgIcon("link"), copyLabel);
+  copyLink.addEventListener("click", async () => {
+    copyLink.disabled = true;
+    try {
+      await writeClipboard(docUrl(doc.slug).href);
+      copyLabel.textContent = "已复制";
+    } catch {
+      copyLabel.textContent = "复制失败";
+    } finally {
+      window.setTimeout(() => { copyLabel.textContent = "复制链接"; copyLink.disabled = false; }, 2200);
+    }
+  });
+  titleRow.append(element("h1", "", doc.title), copyLink);
+  header.append(titleRow, element("p", "help-doc-header__subtitle", doc.subtitle));
   if (doc.description) header.append(element("p", "help-doc-header__description", doc.description));
   const sectionNodes = doc.sections.map((section) => {
     const node = element("section", "help-doc-section");
@@ -722,19 +830,19 @@ function renderDocument(doc) {
   prevNext.setAttribute("aria-label", "上一篇和下一篇");
   if (previous) {
     const anchor = makeLink("", `/guide/${previous.slug}`);
-    anchor.append(element("small", "", "← 上一篇"), element("strong", "", previous.navTitle));
+    anchor.append(element("small", "", "上一篇"), element("strong", "", previous.navTitle));
     prevNext.append(anchor);
   } else prevNext.append(element("span"));
   if (next) {
     const anchor = makeLink("", `/guide/${next.slug}`);
-    anchor.append(element("small", "", "下一篇 →"), element("strong", "", next.navTitle));
+    anchor.append(element("small", "", "下一篇"), element("strong", "", next.navTitle));
     prevNext.append(anchor);
   } else prevNext.append(element("span"));
 
   const footer = element("footer", "help-doc-footer");
   footer.append(document.createTextNode(`文档更新于 ${formatUpdatedAt(state.payload.updated_at)} · `));
   footer.append(makeLink("在 GitHub 查看内容源", "https://github.com/qq85423296/T3FAP/blob/main/content/help/index.json"));
-  article.replaceChildren(breadcrumb, header, ...sectionNodes, prevNext, footer);
+  article.replaceChildren(header, ...sectionNodes, prevNext, footer);
   article.hidden = false;
   elements.loading.hidden = true;
   elements.error.hidden = true;
@@ -745,7 +853,7 @@ function renderDocument(doc) {
 
 function renderNotFound(slug) {
   const header = element("header", "help-doc-header");
-  header.append(element("p", "help-doc-header__group", "404 / HELP"), element("h1", "", "没有找到这篇文档"), element("p", "help-doc-header__subtitle", `地址中的文档标识“${slug}”不存在，可能已更名或下线。`));
+  header.append(element("h1", "", "没有找到这篇文档"), element("p", "help-doc-header__subtitle", `地址中的文档标识“${slug}”不存在，可能已更名或下线。`));
   const actions = element("div", "help-actions");
   actions.append(makeLink("返回帮助首页", "/guide", "help-button help-button--primary"), makeLink("查看常见问题", "/guide/faq", "help-button"));
   elements.article.replaceChildren(header, actions);
@@ -800,6 +908,7 @@ function navigate(url, { replace = false, smooth = true } = {}) {
   if (replace) window.history.replaceState({}, "", relativeUrl(url));
   else window.history.pushState({}, "", relativeUrl(url));
   closeSearch();
+  closeMobileSearch();
   closeMenu();
   renderRoute({ smooth });
 }
@@ -807,6 +916,12 @@ function navigate(url, { replace = false, smooth = true } = {}) {
 function closeSearch() {
   elements.searchResults.hidden = true;
   elements.search.setAttribute("aria-expanded", "false");
+}
+
+function closeMobileSearch() {
+  elements.searchContainer.classList.remove("is-open");
+  elements.searchToggle.setAttribute("aria-expanded", "false");
+  elements.searchToggle.setAttribute("aria-label", "打开教程搜索");
 }
 
 function renderSearchResults() {
@@ -856,8 +971,8 @@ function renderSearchResults() {
 }
 
 const menuBackground = [
-  document.querySelector(".help-header"),
-  document.querySelector(".help-status"),
+  document.querySelector(".help-topbar"),
+  document.querySelector(".help-channelbar"),
   document.querySelector("#help-main"),
   document.querySelector(".help-outline"),
 ].filter(Boolean);
@@ -935,11 +1050,25 @@ document.addEventListener("click", (event) => {
 });
 
 document.addEventListener("click", (event) => {
-  if (!event.target.closest(".help-search")) closeSearch();
+  if (!event.target.closest(".help-search") && !event.target.closest("#help-search-toggle")) {
+    closeSearch();
+    closeMobileSearch();
+  }
 });
 
 elements.search.addEventListener("input", renderSearchResults);
 elements.search.addEventListener("focus", renderSearchResults);
+elements.searchToggle.addEventListener("click", () => {
+  if (elements.searchContainer.classList.contains("is-open")) {
+    closeMobileSearch();
+    closeSearch();
+    return;
+  }
+  elements.searchContainer.classList.add("is-open");
+  elements.searchToggle.setAttribute("aria-expanded", "true");
+  elements.searchToggle.setAttribute("aria-label", "关闭教程搜索");
+  elements.search.focus({ preventScroll: true });
+});
 elements.menuButton.addEventListener("click", openMenu);
 elements.menuClose.addEventListener("click", closeMenu);
 elements.backdrop.addEventListener("click", closeMenu);
@@ -950,13 +1079,14 @@ document.addEventListener("keydown", (event) => {
   trapMenuFocus(event);
   if (event.key !== "Escape") return;
   closeSearch();
+  closeMobileSearch();
   closeMenu();
   elements.search.blur();
 });
 
 window.addEventListener("popstate", () => renderRoute());
 window.addEventListener("hashchange", () => scrollToRouteTarget(true));
-window.addEventListener("resize", closeMenu);
+window.addEventListener("resize", () => { closeMenu(); closeMobileSearch(); });
 window.addEventListener("online", () => { void loadHelp(); });
 window.setInterval(() => {
   if (document.visibilityState === "visible" && navigator.onLine) void loadHelp();
